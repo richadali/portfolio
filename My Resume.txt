@@ -1,0 +1,142 @@
+Richad Yamin Ali
+
+
+richadyaminali@gmail.com
+7002615524
+Jorhat, Assam
+https://www.linkedin.com/in/richadyaminali/
+
+
+
+------------------------
+Software Engineer
+
+
+------------------------
+Experienced IT professional with 5+ years in full-stack development, server setup and project deployment. Skilled in building scalable applications and configuring server environments. Seeking a challenging role to apply my technical expertise and stay ahead of emerging industry trends.
+
+
+EDUcation
+------------------------
+Master of Computer Applications
+Jorhat Engineering College, Jorhat
+08/2019 - 08/2022
+8.75 CGPA
+Under Assam Science and Technology University
+Achievements/Tasks
+
+
+
+Bachelor of Computer Applications
+Jagannath Barooah College, Jorhat
+08/2016 - 07/2019
+73.52 %
+Under Dibrugarh University
+Achievements/Tasks
+
+
+
+
+
+
+work experience
+------------------------
+Programmer (PHP / SpringBoot)
+NIC Shillong, Meghalaya State Centre
+03/2023 - 11/2024
+Shillong, Meghalaya
+Projects/Tasks
+- Developed the OAP (Optimised Advertising Process) System for DIPR, Meghalaya  using Laravel, PostgreSQL. 
+- Contributed in the development of NIC CMS (Content Management System) using Laravel, PostgreSQL, Vue.js 
+- Integrated GRAS payment gateway with Meg RTI Online application. 
+- Setting up of Ubuntu server machines, including the installation and configuration of necessary packages for application deployment and operations. 
+-  Maintenance of projects : "Connect Kam and Skill Hands" under Directorate of Employment & Craftsmen Training. Technologies used : PHP, CodeIgniter, PostgreSQL.  
+- Developed the portal for ITI-Admission and Dect Web Portal using SpringBoot, PostgreSQL, Thymeleaf. 
+- Developed a script in Laravel to send data from Connect Kam database to NCS Api using Cronjob. 
+
+
+Software Engineering Intern (Scala, Angular)
+Vantage Circle, Guwahati
+02/2022 - 08/2022
+Guwahati, Assam.
+Achievements/Tasks:
+- Developed a tool to track and rate the Employee Engagement Score of  various companies across the globe. 
+- Developed an algorithm that groups companies based on their LinkedIn specialties. 
+- Tools and Technologies used: Scala, Angular, Play Framework, Java, MySQL, Redis, MongoDB. 
+
+
+Full-Stack Developer (PHP, BillDesk)
+R.S Computers, Guwahati
+08/2019 - 02/2023
+Remote Work
+Projects/Tasks:
+- Developed an Online Census Portal for Janagoshthiyta Samannay Parishad Asom (JSPA) 
+- Developed Online Admission Portal, College Management System and ERP Software for various Govt. Affiliated Colleges of  Assam  like Jorhat Kendriya Mahavidyalaya, Amguri College, Swahid Peoli Phukan College Namti, etc. 
+
+
+
+
+
+Skills
+------------------------
+-PHP
+-Laravel
+-SpringBoot
+-Scala
+-PostgreSQL
+-MySQL
+-Redis
+-GIT
+-Thymeleaf
+-CSS
+-Bootstrap
+
+
+
+Personal Projects
+------------------------
+AASHROY (PHP)
+- It is a mapping system build to keep a track of the homeless people in Assam wherein volunteers can  request for help from the registered NGOs if they witness any homeless people along with anonymous reporting of crimes and donations to the NGOs and Organizations. 
+- Tools Used- PHP, Instamojo, Reverse Geocoding, Geocoding,  Place API, Embedded Map API, 2Factor for OTP. 
+
+
+An Android app for JEC College Canteen (Flutter, Firebase, PHP)
+- Providing a friendly and convenient way for the various departments and faculties to order food from  the canteen on credit basis. 
+
+
+GOODBITE Billing & Accounts (PHP)
+- It is a web based application build to automate the process of Invoice Generation, along with Accounts and Billing for the respective restaurant. 
+
+
+Soundex System for Bodo Language (PHP)
+- A Soundex System developed in PHP which aims to solve the problem of commonly misspelled words  in the Bodo Language or in the Devanagari Script. 
+
+
+DotInk (PHP)
+- It is an online platform where publishers can list their publications and books for purchase and the  interested customers can place their order conveniently with the integration of various payment  modes. 
+
+
+Online Voting System for Assam Agricultural University (PHP)
+- Developed a comprehensive set of voting solution allowing the University to be hold elections easily and  efficiently minimizing the need of manpower. 
+
+
+
+
+
+Achievements
+------------------------
+HACKATHON winner
+Winner of the all Assam software programing competition namely “Dr. Madhab Chandra Bora  Memorial HACKATHON” organized by Jorhat Engineering College on the occasion of Diamond Jubilee  in 2021.
+
+
+
+
+
+Languages
+------------------------
+-English- (80/100)
+-Assamese- (80/100)
+-Hindi- (80/100)
+
+
+
