@@ -12,6 +12,7 @@ import {
   headTextAnimation,
 } from "../../utils/motion";
 import StarCanvas from "../canvas/Stars";
+import SEO from "../SEO";
 
 const HeroContainer = styled.div`
   display: flex;
@@ -244,7 +245,12 @@ const ContactItem = styled.a`
 
 const Hero = () => {
   return (
-    <div id="About">
+    <div id="about">
+      <SEO 
+        section="About"
+        description="Meet Richad Yamin Ali, an experienced Full Stack Developer with 5+ years in software engineering. Specializing in PHP, React, SpringBoot, and cloud technologies."
+        keywords="Richad Yamin Ali, About, Full Stack Developer, Software Engineer, PHP, React, SpringBoot, Flutter, Portfolio"
+      />
       <HeroContainer>
         <HeroBg>
           <StarCanvas />

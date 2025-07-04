@@ -13,6 +13,8 @@ import Contact from "./components/sections/Contact";
 import Footer from "./components/sections/Footer";
 import ProjectDetails from "./components/Dialog/ProjectDetails";
 import { useState } from "react";
+import { HelmetProvider } from "react-helmet-async";
+import SEO from "./components/SEO";
 
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -40,36 +42,39 @@ const Wrapper = styled.div`
 function App() {
   const [openModal, setOpenModal] = useState({ state: false, project: null });
   return (
-    <ThemeProvider theme={darkTheme}>
-      <BrowserRouter>
-        <Navbar />
-        <Body>
-          <StarCanvas />
-          <AnimatePresence>
-            <div>
-              <Hero />
-              <Wrapper>
-                <Skills />
-                <Experience />
-              </Wrapper>
-              <Projects openModal={openModal} setOpenModal={setOpenModal} />
-              <Wrapper>
-                <Education />
-                <Contact />
-              </Wrapper>
-              <Footer />
+    <HelmetProvider>
+      <ThemeProvider theme={darkTheme}>
+        <BrowserRouter>
+          <SEO />
+          <Navbar />
+          <Body>
+            <StarCanvas />
+            <AnimatePresence>
+              <div>
+                <Hero />
+                <Wrapper>
+                  <Skills />
+                  <Experience />
+                </Wrapper>
+                <Projects openModal={openModal} setOpenModal={setOpenModal} />
+                <Wrapper>
+                  <Education />
+                  <Contact />
+                </Wrapper>
+                <Footer />
 
-              {openModal.state && (
-                <ProjectDetails
-                  openModal={openModal}
-                  setOpenModal={setOpenModal}
-                />
-              )}
-            </div>
-          </AnimatePresence>
-        </Body>
-      </BrowserRouter>
-    </ThemeProvider>
+                {openModal.state && (
+                  <ProjectDetails
+                    openModal={openModal}
+                    setOpenModal={setOpenModal}
+                  />
+                )}
+              </div>
+            </AnimatePresence>
+          </Body>
+        </BrowserRouter>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
 

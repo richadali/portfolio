@@ -1,0 +1,44 @@
+{
+    "short_name": "Richad Ali",
+    "name": "Richad Yamin Ali - Full Stack Developer Portfolio",
+    "description": "Experienced Full Stack Developer with 5+ years in software engineering, specializing in PHP, React, SpringBoot, and cloud technologies.",
+    "icons": [
+        {
+            "src": "HeroImage.jpg",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "HeroImage.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg",
+            "purpose": "maskable"
+        },
+        {
+            "src": "HeroImage.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg",
+            "purpose": "maskable"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "en-US",
+    "categories": [
+        "portfolio",
+        "developer",
+        "business"
+    ],
+    "screenshots": [
+        {
+            "src": "HeroImage.jpg",
+            "sizes": "1280x720",
+            "type": "image/jpeg",
+            "form_factor": "wide"
+        }
+    ]
+}

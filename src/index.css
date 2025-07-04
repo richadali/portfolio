@@ -39,3 +39,39 @@ body {
 ::-webkit-backdrop-filter {
   blur: 3px saturate(106%);
 }
+
+/* Performance optimizations for SEO */
+img {
+  max-width: 100%;
+  height: auto;
+  loading: lazy;
+}
+
+/* Preload critical resources */
+.hero-image {
+  loading: eager;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-display: swap;
+}
+
+/* Reduce layout shift */
+.container {
+  contain: layout;
+}
+
+/* Improve scrolling performance */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
