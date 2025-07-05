@@ -12,6 +12,7 @@ import Projects from "./components/sections/Projects";
 import Contact from "./components/sections/Contact";
 import Footer from "./components/sections/Footer";
 import ProjectDetails from "./components/Dialog/ProjectDetails";
+import LoadingScreen from "./components/LoadingScreen";
 import { useState } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import SEO from "./components/SEO";
@@ -41,37 +42,63 @@ const Wrapper = styled.div`
 
 function App() {
   const [openModal, setOpenModal] = useState({ state: false, project: null });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    // Small delay to ensure smooth transition
+    setTimeout(() => {
+      setIsLoadingComplete(true);
+    }, 200);
+  };
+
   return (
     <HelmetProvider>
       <ThemeProvider theme={darkTheme}>
         <BrowserRouter>
           <SEO />
-          <Navbar />
-          <Body>
-            <StarCanvas />
-            <AnimatePresence>
-              <div>
-                <Hero />
-                <Wrapper>
-                  <Skills />
-                  <Experience />
-                </Wrapper>
-                <Projects openModal={openModal} setOpenModal={setOpenModal} />
-                <Wrapper>
-                  <Education />
-                  <Contact />
-                </Wrapper>
-                <Footer />
 
-                {openModal.state && (
-                  <ProjectDetails
-                    openModal={openModal}
-                    setOpenModal={setOpenModal}
-                  />
-                )}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <LoadingScreen
+                key="loading"
+                onLoadingComplete={handleLoadingComplete}
+              />
+            ) : (
+              <div key="main-content">
+                <Navbar />
+                <Body>
+                  <StarCanvas />
+                  <AnimatePresence>
+                    <div>
+                      <Hero isLoadingComplete={isLoadingComplete} />
+                      <Wrapper>
+                        <Skills />
+                        <Experience />
+                      </Wrapper>
+                      <Projects
+                        openModal={openModal}
+                        setOpenModal={setOpenModal}
+                      />
+                      <Wrapper>
+                        <Education />
+                        <Contact />
+                      </Wrapper>
+                      <Footer />
+
+                      {openModal.state && (
+                        <ProjectDetails
+                          openModal={openModal}
+                          setOpenModal={setOpenModal}
+                        />
+                      )}
+                    </div>
+                  </AnimatePresence>
+                </Body>
               </div>
-            </AnimatePresence>
-          </Body>
+            )}
+          </AnimatePresence>
         </BrowserRouter>
       </ThemeProvider>
     </HelmetProvider>

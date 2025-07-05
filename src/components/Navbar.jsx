@@ -16,6 +16,7 @@ const Nav = styled.div`
   z-index: 10;
   color: white;
 `;
+
 const ColorText = styled.div`
   color: ${({ theme }) => theme.primary};
   font-size: 32px;
@@ -30,6 +31,7 @@ const NavbarContainer = styled.div`
   justify-content: space-between;
   font-size: 1rem;
 `;
+
 const NavLogo = styled(LinkR)`
   display: flex;
   align-items: center;

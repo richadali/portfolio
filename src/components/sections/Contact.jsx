@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import emailjs from "@emailjs/browser";
-import EarthCanvas from "../canvas/Earth";
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +25,26 @@ const Wrapper = styled.div`
   gap: 12px;
   @media (max-width: 960px) {
     flex-direction: column;
+  }
+`;
+
+const DecorativeBackground = styled.div`
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(123, 67, 151, 0.2) 0%,
+    rgba(175, 75, 187, 0.1) 100%
+  );
+  filter: blur(80px);
+  z-index: -1;
+  opacity: 0.5;
+  pointer-events: none;
+  @media (max-width: 768px) {
+    width: 300px;
+    height: 300px;
   }
 `;
 
@@ -88,12 +107,14 @@ const ContactForm = styled.form`
   margin-top: 28px;
   gap: 12px;
 `;
+
 const ContactTitle = styled.div`
   font-size: 28px;
   margin-bottom: 6px;
   font-weight: 600;
   color: ${({ theme }) => theme.text_primary};
 `;
+
 const ContactInput = styled.input`
   flex: 1;
   background-color: transparent;
@@ -107,6 +128,7 @@ const ContactInput = styled.input`
     border: 1px solid ${({ theme }) => theme.primary};
   }
 `;
+
 const ContactInputMessage = styled.textarea`
   flex: 1;
   background-color: transparent;
@@ -120,6 +142,7 @@ const ContactInputMessage = styled.textarea`
     border: 1px solid ${({ theme }) => theme.primary};
   }
 `;
+
 const ContactButton = styled.input`
   width: 100%;
   text-decoration: none;
@@ -175,7 +198,7 @@ const Contact = () => {
   return (
     <Container id="Contact">
       <Wrapper>
-        <EarthCanvas />
+        <DecorativeBackground />
         <Title>Contact</Title>
         <Desc>
           Feel free to reach out to me for any questions or opportunities!

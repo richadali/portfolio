@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://richadyamin.github.io/sitemap.xml
+Sitemap: https://richadali.dev/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1

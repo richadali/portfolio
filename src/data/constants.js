@@ -6,7 +6,7 @@ export const Bio = {
     "PHP Developer",
     "SpringBoot Developer",
     "Programmer",
-    "Flutter/Android Developer",
+    "Flutter Developer",
   ],
   description:
     "Experienced IT professional with 5+ years in full-stack development, server setup and project deployment. Skilled in building scalable applications and configuring server environments. Seeking a challenging role to apply my technical expertise and stay ahead of emerging industry trends.",
@@ -320,6 +320,18 @@ export const education = [
 ];
 
 export const projects = [
+  {
+    id: 7,
+    title: "AI Travel Planner",
+    date: "2025",
+    description:
+      "An AI-powered travel planning application that generates personalized travel itineraries based on user preferences with daily activities, accommodations, transportation options, and budget breakdown",
+    image: require("../images/ai_travel_planner.png"),
+    tags: ["Next.js", "Tailwind CSS", "Shadcn", "Google Gemini"],
+    category: "ai",
+    github: "",
+    webapp: "https://richadali.dev/ai-travel-planner",
+  },
   {
     id: 0,
     title: "Aashroy",

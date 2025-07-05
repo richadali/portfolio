@@ -4,15 +4,16 @@ import { projects } from "../../data/constants";
 import ProjectCard from "../cards/ProjectCard";
 
 const Container = styled.div`
-margin-top: 100px;
-display: flex;
-flex-direction: column;
-justify-content-center;
-position: relative;
-z-index: 1;
-padding: 0 16px;
-align-items: center;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content-center;
+  position: relative;
+  z-index: 1;
+  padding: 0 16px;
+  align-items: center;
 `;
+
 const Wrapper = styled.div`
   position: relative;
   display: flex;
@@ -50,16 +51,16 @@ const Desc = styled.div`
 `;
 
 const ToggleButtonGroup = styled.div`
-display: flex;
-border: 1.5px solid ${({ theme }) => theme.primary};
-color: ${({ theme }) => theme.primary};
-font-size: 16px;
-border-radius: 12px;
-font-weight 500;
-margin: 22px 0;
-@media (max-width: 768px){
+  display: flex;
+  border: 1.5px solid ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.primary};
+  font-size: 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  margin: 22px 0;
+  @media (max-width: 768px){
     font-size: 12px;
-}
+  }
 `;
 
 const ToggleButton = styled.div`
@@ -76,7 +77,7 @@ const ToggleButton = styled.div`
   ${({ active, theme }) =>
     active &&
     `
-  background:  ${theme.primary + 20};
+    background: ${theme.primary + 20};
   `}
 `;
 
@@ -130,8 +131,8 @@ const Projects = ({ openModal, setOpenModal }) => {
           </ToggleButton>
           <Divider />
           <ToggleButton
-            active={toggle === "machine learning"}
-            onClick={() => setToggle("machine learning")}
+            active={toggle === "ai"}
+            onClick={() => setToggle("ai")}
           >
             AI
           </ToggleButton>
