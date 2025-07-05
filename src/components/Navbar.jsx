@@ -3,6 +3,7 @@ import { Link as LinkR } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
 import { Bio } from "../data/constants";
 import { MenuRounded } from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Nav = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -105,12 +106,20 @@ const MobileIcon = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.text_primary};
   display: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  
+  &:hover {
+    color: ${({ theme }) => theme.primary};
+    transform: scale(1.1);
+  }
+  
   @media screen and (max-width: 768px) {
     display: block;
   }
 `;
 
-const MobileMenu = styled.ul`
+const MobileMenu = styled(motion.ul)`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -120,23 +129,109 @@ const MobileMenu = styled.ul`
   list-style: none;
   width: 100%;
   padding: 12px 40px 24px 40px;
-  background: ${({ theme }) => theme.card_light + 99};
+  
+  /* Enhanced background with gaussian blur */
+  background: rgba(25, 25, 36, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
   position: absolute;
   top: 80px;
   right: 0;
-
-  transition: all 0.6s ease-in-out;
-  transform: ${({ isOpen }) =>
-    isOpen ? "translateY(0)" : "translateY(-100%)"};
   border-radius: 0 0 20px 20px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  opacity: ${({ isOpen }) => (isOpen ? "100%" : "0")};
-  z-index: ${({ isOpen }) => (isOpen ? "1000" : "-1000")};
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
 `;
+
+const MobileNavLink = styled(motion.a)`
+  color: ${({ theme }) => theme.text_primary};
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  padding: 8px 0;
+  border-radius: 8px;
+  width: 100%;
+  
+  &:hover {
+    color: ${({ theme }) => theme.primary};
+    transform: translateX(10px);
+    background: rgba(133, 76, 230, 0.1);
+    padding-left: 12px;
+  }
+`;
+
+const MobileGithubButton = styled(motion.a)`
+  border: 1px solid ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text_primary};
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  background: ${({ theme }) => theme.primary};
+  margin-top: 8px;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(133, 76, 230, 0.4);
+  }
+`;
+
+// Animation variants
+const menuVariants = {
+  closed: {
+    opacity: 0,
+    y: -20,
+    scale: 0.95,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  closed: {
+    opacity: 0,
+    x: -20,
+    transition: {
+      duration: 0.2
+    }
+  },
+  open: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  }
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
+  
   return (
     <Nav>
       <NavbarContainer>
@@ -159,38 +254,66 @@ const Navbar = () => {
           <NavLink href="#Contact">Contact</NavLink>
         </NavItems>
 
-        {isOpen && (
-          <MobileMenu isOpen={isOpen}>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#About">
-              About
-            </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Skills">
-              Skills
-            </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Experience">
-              Experience
-            </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Projects">
-              Projects
-            </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Education">
-              Education
-            </NavLink>
-            <NavLink onClick={() => setIsOpen(!isOpen)} href="#Contact">
-              Contact
-            </NavLink>
-            <GithubButton
-              href={Bio.github}
-              target="_Blank"
-              style={{
-                background: theme.primary,
-                color: theme.text_primary,
-              }}
+        <AnimatePresence>
+          {isOpen && (
+            <MobileMenu
+              variants={menuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
             >
-              Github Profile
-            </GithubButton>
-          </MobileMenu>
-        )}
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#About"
+              >
+                About
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#Skills"
+              >
+                Skills
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#Experience"
+              >
+                Experience
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#Projects"
+              >
+                Projects
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#Education"
+              >
+                Education
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={() => setIsOpen(false)} 
+                href="#Contact"
+              >
+                Contact
+              </MobileNavLink>
+              <MobileGithubButton
+                variants={itemVariants}
+                href={Bio.github}
+                target="_Blank"
+              >
+                Github Profile
+              </MobileGithubButton>
+            </MobileMenu>
+          )}
+        </AnimatePresence>
 
         <ButtonContainer>
           <GithubButton href={Bio.github} target="_Blank">
