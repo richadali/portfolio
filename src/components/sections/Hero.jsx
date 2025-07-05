@@ -75,9 +75,10 @@ const HeroLeftContainer = styled.div`
     order: 2;
     margin-bottom: 30px;
     display: flex;
-    gap: 6px;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 `;
 const HeroRightContainer = styled.div`
@@ -198,6 +199,11 @@ const ResumeButton = styled.a`
     filter: brightness(1);
   }
 
+  @media (max-width: 960px) {
+    margin: 0 auto;
+    display: block;
+  }
+
   @media (max-width: 640px) {
     padding: 12px 0;
     font-size: 18px;
@@ -244,6 +250,17 @@ const ContactItem = styled.a`
   &:hover {
     color: ${({ theme }) => theme.primary};
     transform: scale(1.05);
+  }
+`;
+
+const ContentWrapper = styled(motion.div)`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: 960px) {
+    align-items: center;
+    width: 100%;
   }
 `;
 
@@ -335,12 +352,12 @@ const Hero = ({ isLoadingComplete = true }) => {
                 </TextLoop>
               </motion.div>
               
-              <motion.div {...headContentAnimation}>
+              <ContentWrapper {...headContentAnimation}>
                 <SubTitle>{Bio.description}</SubTitle>
                 <ResumeButton href={Bio.resume} target="_blank">
                   Check Resume
                 </ResumeButton>
-              </motion.div>
+              </ContentWrapper>
             </HeroLeftContainer>
             <HeroRightContainer>
               <motion.div {...imageAnimation}>
