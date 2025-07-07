@@ -5,12 +5,12 @@ import { Tilt } from "react-tilt";
 import { motion } from "framer-motion";
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content-center;
-  position: relative;
-  z-index: 1;
-  align-items: center;
+display: flex;
+flex-direction: column;
+justify-content-center;
+position: relative;
+z-index: 1;
+align-items: center;
 `;
 
 const Wrapper = styled.div`
@@ -215,7 +215,7 @@ const Skills = () => {
           whileInView="animate"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <Title>Skills</Title>
+        <Title>Skills</Title>
         </motion.div>
 
         <motion.div
@@ -225,14 +225,14 @@ const Skills = () => {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ delay: 0.2 }}
         >
-          <Desc
-            style={{
-              marginBottom: "40px",
-            }}
-          >
-            Here are some of my skills that I have developed over my 5+ years of experience
-            in full-stack development and server management.
-          </Desc>
+        <Desc
+          style={{
+            marginBottom: "40px",
+          }}
+        >
+          Here are some of my skills that I have developed over my 5+ years of experience
+          in full-stack development and server management.
+        </Desc>
         </motion.div>
 
         <motion.div
@@ -241,8 +241,8 @@ const Skills = () => {
           whileInView="animate"
           viewport={{ once: true, amount: 0.1 }}
         >
-          <SkillsContainer>
-            {skills.map((skill, index) => (
+        <SkillsContainer>
+          {skills.map((skill, index) => (
               <motion.div
                 key={`skill-${index}`}
                 variants={staggerItem}
@@ -251,7 +251,7 @@ const Skills = () => {
                   transition: { duration: 0.3 }
                 }}
               >
-                <Tilt>
+            <Tilt>
                   <Skill>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -259,7 +259,7 @@ const Skills = () => {
                       transition={{ duration: 0.6, delay: 0.1 }}
                       viewport={{ once: true }}
                     >
-                      <SkillTitle>{skill.title}</SkillTitle>
+                <SkillTitle>{skill.title}</SkillTitle>
                     </motion.div>
                     
                     <motion.div
@@ -268,8 +268,8 @@ const Skills = () => {
                       whileInView="animate"
                       viewport={{ once: true }}
                     >
-                      <SkillList>
-                        {skill.skills.map((item, index_x) => (
+                <SkillList>
+                  {skill.skills.map((item, index_x) => (
                           <motion.div
                             key={`skill-x-${index_x}`}
                             variants={skillItemVariants}
@@ -280,18 +280,18 @@ const Skills = () => {
                             whileTap={{ scale: 0.95 }}
                           >
                             <SkillItem>
-                              <SkillImage src={item.image} />
-                              {item.name}
-                            </SkillItem>
+                      <SkillImage src={item.image} />
+                      {item.name}
+                    </SkillItem>
                           </motion.div>
-                        ))}
-                      </SkillList>
+                  ))}
+                </SkillList>
                     </motion.div>
-                  </Skill>
-                </Tilt>
+              </Skill>
+            </Tilt>
               </motion.div>
-            ))}
-          </SkillsContainer>
+          ))}
+        </SkillsContainer>
         </motion.div>
       </Wrapper>
     </Container>

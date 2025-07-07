@@ -192,22 +192,22 @@ const ResumeButton = styled.a`
   cursor: pointer;
   transition: all 0.2s ease-in-out !important;
 
-  &:hover {
-    transform: scale(1.05);
+     &:hover {
+        transform: scale(1.05);
     transition: all 0.4s ease-in-out;
     box-shadow: 20px 20px 60px #1f2634;
     filter: brightness(1);
-  }
-
+    }    
+    
   @media (max-width: 960px) {
     margin: 0 auto;
     display: block;
   }
-
-  @media (max-width: 640px) {
-    padding: 12px 0;
-    font-size: 18px;
-  }
+    
+    @media (max-width: 640px) {
+        padding: 12px 0;
+        font-size: 18px;
+    } 
 `;
 
 const Img = styled.img`
@@ -322,7 +322,7 @@ const Hero = ({ isLoadingComplete = true }) => {
     <div id="about">
       <SEO 
         description="Meet Richad Yamin Ali, an experienced Full Stack Developer with 5+ years in software engineering. Specializing in PHP, React, SpringBoot, and cloud technologies."
-        keywords="Richad Yamin Ali, About, Full Stack Developer, Software Engineer, PHP, React, SpringBoot, Flutter, Portfolio"
+        keywords="Richad Yamin Ali, Richad Ali, About, Full Stack Developer, Software Engineer, PHP, React, SpringBoot, Flutter, Portfolio"
       />
       <HeroContainer>
         <HeroBg>
@@ -351,12 +351,12 @@ const Hero = ({ isLoadingComplete = true }) => {
                   </Span>
                 </TextLoop>
               </motion.div>
-              
+
               <ContentWrapper {...headContentAnimation}>
                 <SubTitle>{Bio.description}</SubTitle>
-                <ResumeButton href={Bio.resume} target="_blank">
-                  Check Resume
-                </ResumeButton>
+              <ResumeButton href={Bio.resume} target="_blank">
+                Check Resume
+              </ResumeButton>
               </ContentWrapper>
             </HeroLeftContainer>
             <HeroRightContainer>

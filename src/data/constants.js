@@ -414,9 +414,8 @@ export const projects = [
     date: "2019",
     description:
       "Developed a comprehensive set of voting solutions allowing the University to hold elections easily and efficiently, minimizing the need for manpower.",
-    image:
-      "https://images.unsplash.com/photo-1541119684835-1e1cf10d094a?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    tags: ["PHP", "MySQL", "Security", "Voting System"],
+    image: require("../images/aau.png"),
+    tags: ["PHP", "MySQL", "Bootstrap"],
     category: "web app",
     github: "https://github.com/richadYamin/aau-voting",
     webapp: "",

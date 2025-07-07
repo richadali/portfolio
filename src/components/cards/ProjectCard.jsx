@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 import { GitHub } from "@mui/icons-material";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
-const Card = styled.div`
+const Card = styled(motion.div)`
   width: 330px;
   height: 520px;
   background-color: ${({ theme }) => theme.card};
@@ -15,13 +16,7 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: all 0.5s ease-in-out;
   position: relative;
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 50px 4px rgba(0, 0, 0, 0.6);
-    filter: brightness(1.1);
-  }
 `;
 
 const Badge = styled.div`
@@ -130,8 +125,8 @@ const Button = styled.a`
   padding: 8px 12px;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.primary};
-  ${({ dull, theme }) =>
-    dull &&
+  ${({ $dull, theme }) =>
+    $dull &&
     `
       background-color: ${theme.bgLight};
       color: ${theme.text_secondary};
@@ -167,7 +162,18 @@ const Button = styled.a`
 
 const ProjectCard = ({ project, setOpenModal }) => {
   return (
-    <Card>
+    <Card
+      whileHover={{ 
+        y: -10,
+        boxShadow: "0 0 50px 4px rgba(0, 0, 0, 0.6)",
+        filter: "brightness(1.1)",
+        transition: { duration: 0.3, ease: "easeOut" }
+      }}
+      whileTap={{ 
+        scale: 0.98,
+        transition: { duration: 0.1 }
+      }}
+    >
       {project.award && (
         <Badge>
           <EmojiEventsIcon style={{ fontSize: 16 }} /> {project.award}
@@ -186,7 +192,7 @@ const ProjectCard = ({ project, setOpenModal }) => {
       </Details>
       <ButtonGroup>
         <Button 
-          dull 
+          $dull={true}
           href={project.github || "#"} 
           target="_blank" 
           onClick={(e) => !project.github && e.preventDefault()}

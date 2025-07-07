@@ -4,6 +4,7 @@ import styled, { useTheme } from "styled-components";
 import { Bio } from "../data/constants";
 import { MenuRounded } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
+import useActiveSection from "../hooks/useActiveSection";
 
 const Nav = styled.div`
   background-color: ${({ theme }) => theme.bg};
@@ -58,14 +59,53 @@ const NavItems = styled.ul`
   }
 `;
 
-const NavLink = styled.a`
-  color: ${({ theme }) => theme.text_primary};
+const NavLink = styled(motion.a)`
+  color: ${({ theme, $isActive }) => $isActive ? theme.primary : theme.text_primary};
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.5s ease-in-out;
   text-decoration: none;
+  position: relative;
+  padding: 8px 1px;
+  border-radius: 8px;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: ${({ $isActive }) => $isActive ? '100%' : '0%'};
+    height: 2px;
+    background: ${({ theme }) => theme.primary};
+    transform: translateX(-50%);
+    transition: width 0.5s ease-in-out;
+    border-radius: 1px;
+  }
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.primary}15;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: -1;
+  }
+  
   &:hover {
     color: ${({ theme }) => theme.primary};
+    
+    &:before {
+      width: 100%;
+    }
+    
+    &:after {
+      opacity: 0.5;
+    }
   }
 `;
 
@@ -81,7 +121,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const GithubButton = styled.a`
+const GithubButton = styled(motion.a)`
   border: 1px solid ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.primary};
   justify-content: center;
@@ -92,11 +132,31 @@ const GithubButton = styled.a`
   padding: 10px 20px;
   font-size: 16px;
   font-weight: 500;
-  transition: all 0.6s ease-in-out;
+  transition: all 0.4s ease-in-out;
   text-decoration: none;
-  &:hover {
+  position: relative;
+  overflow: hidden;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
     background: ${({ theme }) => theme.primary};
+    transition: left 0.3s ease;
+    z-index: -1;
+  }
+  
+  &:hover:before {
+    left: 0;
+  }
+  
+  &:hover {
     color: ${({ theme }) => theme.text_primary};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(133, 76, 230, 0.3);
   }
 `;
 
@@ -147,20 +207,40 @@ const MobileMenu = styled(motion.ul)`
 `;
 
 const MobileNavLink = styled(motion.a)`
-  color: ${({ theme }) => theme.text_primary};
+  color: ${({ theme, $isActive }) => $isActive ? theme.primary : theme.text_primary};
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   text-decoration: none;
-  padding: 8px 0;
+  padding: 12px 16px;
   border-radius: 8px;
   width: 100%;
+  position: relative;
+  background: ${({ theme, $isActive }) => $isActive ? `${theme.primary}15` : 'transparent'};
+  border: ${({ theme, $isActive }) => $isActive ? `1px solid ${theme.primary}30` : '1px solid transparent'};
+  
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: ${({ $isActive }) => $isActive ? '4px' : '0px'};
+    height: 60%;
+    background: ${({ theme }) => theme.primary};
+    transform: translateY(-50%);
+    transition: width 0.3s ease-in-out;
+    border-radius: 0 2px 2px 0;
+  }
   
   &:hover {
     color: ${({ theme }) => theme.primary};
-    transform: translateX(10px);
+    transform: translateX(8px);
     background: rgba(133, 76, 230, 0.1);
-    padding-left: 12px;
+    border-color: ${({ theme }) => theme.primary}30;
+    
+    &:before {
+      width: 4px;
+    }
   }
 `;
 
@@ -231,6 +311,55 @@ const itemVariants = {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
+  const activeSection = useActiveSection();
+
+  // Smooth scroll function
+  const handleScrollTo = (e, targetId) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  // Animation variants for navbar items
+  const linkVariants = {
+    inactive: {
+      scale: 1,
+      y: 0
+    },
+    active: {
+      scale: 1,
+      y: 0
+    },
+    hover: {
+      scale: 1,
+      y: 0
+    }
+  };
+
+  // Pulse animation for active items
+  const pulseVariants = {
+    inactive: {
+      boxShadow: "0 0 0 0 rgba(133, 76, 230, 0)"
+    },
+    active: {
+      boxShadow: [
+        "0 0 0 0 rgba(133, 76, 230, 0.4)",
+        "0 0 0 8px rgba(133, 76, 230, 0)",
+        "0 0 0 0 rgba(133, 76, 230, 0)"
+      ],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeOut"
+      }
+    }
+  };
   
   return (
     <Nav>
@@ -246,12 +375,66 @@ const Navbar = () => {
         </MobileIcon>
 
         <NavItems>
-          <NavLink href="#About">About</NavLink>
-          <NavLink href="#Skills">Skills</NavLink>
-          <NavLink href="#Experience">Experience</NavLink>
-          <NavLink href="#Projects">Projects</NavLink>
-          <NavLink href="#Education">Education</NavLink>
-          <NavLink href="#Contact">Contact</NavLink>
+          <NavLink 
+            href="#About"
+            $isActive={activeSection === 'about'}
+            variants={linkVariants}
+            animate={activeSection === 'about' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'about')}
+          >
+            About
+          </NavLink>
+          <NavLink 
+            href="#Skills"
+            $isActive={activeSection === 'skills'}
+            variants={linkVariants}
+            animate={activeSection === 'skills' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Skills')}
+          >
+            Skills
+          </NavLink>
+          <NavLink 
+            href="#Experience"
+            $isActive={activeSection === 'experience'}
+            variants={linkVariants}
+            animate={activeSection === 'experience' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Experience')}
+          >
+            Experience
+          </NavLink>
+          <NavLink 
+            href="#Projects"
+            $isActive={activeSection === 'projects'}
+            variants={linkVariants}
+            animate={activeSection === 'projects' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Projects')}
+          >
+            Projects
+          </NavLink>
+          <NavLink 
+            href="#Education"
+            $isActive={activeSection === 'education'}
+            variants={linkVariants}
+            animate={activeSection === 'education' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Education')}
+          >
+            Education
+          </NavLink>
+          <NavLink 
+            href="#Contact"
+            $isActive={activeSection === 'contact'}
+            variants={linkVariants}
+            animate={activeSection === 'contact' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Contact')}
+          >
+            Contact
+          </NavLink>
         </NavItems>
 
         <AnimatePresence>
@@ -264,43 +447,67 @@ const Navbar = () => {
             >
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'about');
+                  setIsOpen(false);
+                }} 
                 href="#About"
+                $isActive={activeSection === 'about'}
               >
                 About
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'Skills');
+                  setIsOpen(false);
+                }} 
                 href="#Skills"
+                $isActive={activeSection === 'skills'}
               >
                 Skills
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'Experience');
+                  setIsOpen(false);
+                }} 
                 href="#Experience"
+                $isActive={activeSection === 'experience'}
               >
                 Experience
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'Projects');
+                  setIsOpen(false);
+                }} 
                 href="#Projects"
+                $isActive={activeSection === 'projects'}
               >
                 Projects
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'Education');
+                  setIsOpen(false);
+                }} 
                 href="#Education"
+                $isActive={activeSection === 'education'}
               >
                 Education
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  handleScrollTo(e, 'Contact');
+                  setIsOpen(false);
+                }} 
                 href="#Contact"
+                $isActive={activeSection === 'contact'}
               >
                 Contact
               </MobileNavLink>
@@ -316,8 +523,26 @@ const Navbar = () => {
         </AnimatePresence>
 
         <ButtonContainer>
-          <GithubButton href={Bio.github} target="_Blank">
-            Github Profile
+          <GithubButton 
+            href={Bio.github} 
+            target="_Blank"
+            whileHover={{ 
+              scale: 1.05,
+              y: -2,
+              boxShadow: "0 8px 25px rgba(133, 76, 230, 0.3)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.span
+              initial={{ opacity: 1 }}
+              whileHover={{ 
+                opacity: [1, 0.8, 1],
+                transition: { duration: 0.6, repeat: Infinity }
+              }}
+            >
+              Github Profile
+            </motion.span>
           </GithubButton>
         </ButtonContainer>
       </NavbarContainer>

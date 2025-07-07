@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 const SEO = ({ 
   title = "Richad Yamin Ali - Full Stack Developer | Software Engineer Portfolio",
   description = "Experienced Full Stack Developer with 5+ years in software engineering, specializing in PHP, React, SpringBoot, and cloud technologies. View my portfolio showcasing scalable applications and innovative solutions.",
-  keywords = "Richad Yamin Ali, Full Stack Developer, Software Engineer, PHP Developer, React Developer, SpringBoot, Flutter, JavaScript, Laravel, Portfolio, Web Development, Backend Developer, Frontend Developer",
+  keywords = "Richad Yamin Ali, Richad Ali, Full Stack Developer, Software Engineer, PHP Developer, React Developer, SpringBoot, Flutter, JavaScript, Laravel, Portfolio, Web Development, Backend Developer, Frontend Developer",
   image = "https://richadali.dev/HeroImage.jpg",
   url = "https://richadali.dev/",
   type = "website",

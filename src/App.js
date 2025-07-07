@@ -13,6 +13,9 @@ import Contact from "./components/sections/Contact";
 import Footer from "./components/sections/Footer";
 import ProjectDetails from "./components/Dialog/ProjectDetails";
 import LoadingScreen from "./components/LoadingScreen";
+import InteractiveGrid from "./components/backgrounds/InteractiveGrid";
+import NeuralNetwork from "./components/backgrounds/NeuralNetwork";
+
 import { useState } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import SEO from "./components/SEO";
@@ -69,7 +72,11 @@ function App() {
               <div key="main-content">
                 <Navbar />
                 <Body>
+                  {/* Background Layers - Ordered by z-index */}
+                  <InteractiveGrid />
                   <StarCanvas />
+                  <NeuralNetwork />
+
                   <AnimatePresence>
                     <div>
                       <Hero isLoadingComplete={isLoadingComplete} />

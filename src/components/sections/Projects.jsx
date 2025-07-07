@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 import { projects } from "../../data/constants";
 import ProjectCard from "../cards/ProjectCard";
 
 const Container = styled.div`
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content-center;
-  position: relative;
-  z-index: 1;
-  padding: 0 16px;
-  align-items: center;
+margin-top: 40px;
+display: flex;
+flex-direction: column;
+justify-content-center;
+position: relative;
+z-index: 1;
+padding: 0 16px;
+align-items: center;
 `;
 
 const Wrapper = styled.div`
@@ -51,16 +52,16 @@ const Desc = styled.div`
 `;
 
 const ToggleButtonGroup = styled.div`
-  display: flex;
-  border: 1.5px solid ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.primary};
-  font-size: 16px;
-  border-radius: 12px;
+display: flex;
+border: 1.5px solid ${({ theme }) => theme.primary};
+color: ${({ theme }) => theme.primary};
+font-size: 16px;
+border-radius: 12px;
   font-weight: 500;
-  margin: 22px 0;
-  @media (max-width: 768px){
+margin: 22px 0;
+@media (max-width: 768px){
     font-size: 12px;
-  }
+}
 `;
 
 const ToggleButton = styled.div`
@@ -86,7 +87,7 @@ const Divider = styled.div`
   background: ${({ theme }) => theme.primary};
 `;
 
-const CardContainer = styled.div`
+const CardContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,6 +97,36 @@ const CardContainer = styled.div`
 
 const Projects = ({ openModal, setOpenModal }) => {
   const [toggle, setToggle] = useState("all");
+
+  // Animation variants for project cards
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    }
+  };
+
   return (
     <Container id="Projects">
       <Wrapper>
@@ -137,25 +168,41 @@ const Projects = ({ openModal, setOpenModal }) => {
             AI
           </ToggleButton>
         </ToggleButtonGroup>
-        <CardContainer>
+        <CardContainer
+          key={toggle}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1 }}
+        >
           {toggle === "all" &&
-            projects.map((project) => (
-              <ProjectCard
+            projects.map((project, index) => (
+              <motion.div
                 key={project.id}
-                project={project}
-                openModal={openModal}
-                setOpenModal={setOpenModal}
-              />
+                variants={cardVariants}
+                custom={index}
+              >
+                <ProjectCard
+                  project={project}
+                  openModal={openModal}
+                  setOpenModal={setOpenModal}
+                />
+              </motion.div>
             ))}
           {projects
             .filter((item) => item.category === toggle)
-            .map((project) => (
-              <ProjectCard
+            .map((project, index) => (
+              <motion.div
                 key={project.id}
-                project={project}
-                openModal={openModal}
-                setOpenModal={setOpenModal}
-              />
+                variants={cardVariants}
+                custom={index}
+              >
+                <ProjectCard
+                  project={project}
+                  openModal={openModal}
+                  setOpenModal={setOpenModal}
+                />
+              </motion.div>
             ))}
         </CardContainer>
       </Wrapper>

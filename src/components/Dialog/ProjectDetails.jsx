@@ -2,9 +2,10 @@ import { CloseRounded, GitHub, LinkedIn } from "@mui/icons-material";
 import { Modal } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -15,11 +16,10 @@ const Container = styled.div`
   align-items: top;
   justify-content: center;
   overflow-y: scroll;
-  transition: all 0.5s ease;
 `;
 
-const Wrapper = styled.div`
-  max-width: 800px;
+const Wrapper = styled(motion.div)`
+  max-width: 600px;
   width: 100%;
   border-radius: 16px;
   margin: 50px 12px;
@@ -157,13 +157,64 @@ const Award = styled.div`
 
 const ProjectDetails = ({ openModal, setOpenModal }) => {
   const project = openModal?.project;
+
+  // Animation variants for modal
+  const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { duration: 0.3 }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const modalVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0.8,
+      y: 100
+    },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      y: 0,
+      transition: { 
+        duration: 0.4,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8,
+      y: 100,
+      transition: { 
+        duration: 0.3,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    }
+  };
+
   return (
     <Modal
       open={true}
       onClose={() => setOpenModal({ state: false, project: null })}
+      closeAfterTransition
     >
-      <Container>
-        <Wrapper>
+      <Container
+        variants={backdropVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <Wrapper
+          variants={modalVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
           <CloseRounded
             style={{
               position: "absolute",
