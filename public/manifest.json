@@ -4,21 +4,24 @@
     "description": "Experienced Full Stack Developer with 5+ years in software engineering, specializing in PHP, React, SpringBoot, and cloud technologies.",
     "icons": [
         {
-            "src": "HeroImage.jpg",
-            "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/jpeg"
+            "src": "favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
         },
         {
-            "src": "HeroImage.jpg",
+            "src": "favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/jpeg",
-            "purpose": "maskable"
+            "type": "image/png"
         },
         {
-            "src": "HeroImage.jpg",
+            "src": "android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/jpeg",
-            "purpose": "maskable"
+            "type": "image/png"
         }
     ],
     "start_url": ".",
@@ -35,9 +38,9 @@
     ],
     "screenshots": [
         {
-            "src": "HeroImage.jpg",
-            "sizes": "1280x720",
-            "type": "image/jpeg",
+            "src": "android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
             "form_factor": "wide"
         }
     ]

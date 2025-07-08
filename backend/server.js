@@ -129,32 +129,42 @@ app.post(
         to: process.env.ZOHO_EMAIL,
         subject: `Portfolio Contact: ${subject}`,
         html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333; border-bottom: 2px solid #7B4397; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          
-          <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Subject:</strong> ${subject}</p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333; border-bottom: 2px solid #7B4397; padding-bottom: 10px;">
+              New Contact Form Submission
+            </h2>
+            
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Subject:</strong> ${subject}</p>
+            </div>
+            
+            <div style="background: #fff; padding: 20px; border-left: 4px solid #7B4397; margin: 20px 0;">
+              <h3 style="margin-top: 0; color: #333;">Message:</h3>
+              <p style="line-height: 1.6; color: #555;">${message.replace(
+                /\n/g,
+                "<br>"
+              )}</p>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 15px; background: #e8f4fd; border-radius: 8px;">
+              <p style="margin: 0; font-size: 14px; color: #666;">
+                <strong>Tip:</strong> You can reply directly to this email to respond to ${name}.
+              </p>
+            </div>
           </div>
-          
-          <div style="background: #fff; padding: 20px; border-left: 4px solid #7B4397; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Message:</h3>
-            <p style="line-height: 1.6; color: #555;">${message.replace(
-              /\n/g,
-              "<br>"
-            )}</p>
-          </div>
-          
-          <div style="margin-top: 30px; padding: 15px; background: #e8f4fd; border-radius: 8px;">
-            <p style="margin: 0; font-size: 14px; color: #666;">
-              <strong>Tip:</strong> You can reply directly to this email to respond to ${name}.
-            </p>
-          </div>
-        </div>
-      `,
+        `,
+        text: `
+New Contact Form Submission
+
+Name: ${name}
+Email: ${email}
+Subject: ${subject}
+
+Message:
+${message}
+        `,
         replyTo: email,
       };
 
