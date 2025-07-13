@@ -363,8 +363,7 @@ export const projects = [
     date: "2022",
     description:
       "An Android app for JEC College Canteen providing a friendly and convenient way for various departments and faculties to order food from the canteen on a credit basis.",
-    image:
-      "https://images.unsplash.com/photo-1484659619207-9165d119dafe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: require("../images/canteen.png"),
     tags: ["Flutter", "Firebase", "PHP", "MySQL"],
     category: "android app",
     github: "https://github.com/richadYamin/jec-canteen-app",
@@ -376,8 +375,7 @@ export const projects = [
     date: "2020",
     description:
       "A web-based application built to automate the process of Invoice Generation, along with Accounts and Billing for restaurants.",
-    image:
-      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: require("../images/billing.png"),
     tags: ["PHP", "MySQL", "Bootstrap", "JavaScript"],
     category: "web app",
     github: "https://github.com/richadYamin/goodbite-billing",
@@ -401,8 +399,7 @@ export const projects = [
     date: "2020",
     description:
       "An online platform where publishers can list their publications and books for purchase and interested customers can place their orders conveniently with integration of various payment modes.",
-    image:
-      "https://images.unsplash.com/photo-1519682577862-22b62b24e493?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: require("../images/dotink.png"),
     tags: ["PHP", "MySQL", "E-commerce", "Payment Gateway"],
     category: "web app",
     github: "https://github.com/richadYamin/dotink",
