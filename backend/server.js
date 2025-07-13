@@ -127,7 +127,7 @@ app.post(
       const mailOptions = {
         from: `"Portfolio Contact Form" <${process.env.ZOHO_EMAIL}>`,
         to: process.env.ZOHO_EMAIL,
-        subject: `Portfolio Contact: ${subject}`,
+        subject: `${name} - Portfolio Contact: ${subject}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #333; border-bottom: 2px solid #7B4397; padding-bottom: 10px;">
@@ -172,7 +172,7 @@ ${message}
       const autoResponseOptions = {
         from: `"Richad Ali" <${process.env.ZOHO_EMAIL}>`,
         to: email,
-        subject: "Thank you for contacting me!",
+        subject: "Thank you for contacting me",
         headers: {
           "List-Unsubscribe":
             "<mailto:contact@richadali.dev?subject=unsubscribe>",
@@ -182,14 +182,17 @@ ${message}
             .substr(2, 9)}@richadali.dev>`,
           "In-Reply-To": `<contact-form-${Date.now()}@richadali.dev>`,
           References: `<contact-form-${Date.now()}@richadali.dev>`,
+          "X-Priority": "3",
+          "X-MSMail-Priority": "Normal",
+          Importance: "Normal",
         },
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #7B4397; text-align: center;">Thank You, ${name}!</h2>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+            <h2 style="color: #333; text-align: center;">Thank You, ${name}</h2>
             
-            <div style="background: linear-gradient(135deg, #7B4397, #DC2430); color: white; padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0;">
-              <h3 style="margin: 0 0 15px 0;">Message Received Successfully!</h3>
-              <p style="margin: 0; font-size: 16px; opacity: 0.9;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; border: 1px solid #e9ecef;">
+              <h3 style="margin: 0 0 15px 0; color: #333;">Message Received Successfully</h3>
+              <p style="margin: 0; font-size: 16px; color: #666;">
                 I will get back to you within 24 hours.
               </p>
             </div>
@@ -205,20 +208,20 @@ ${message}
             <div style="text-align: center; margin: 30px 0;">
               <p style="color: #666; margin: 10px 0;">Feel free to reach out anytime:</p>
               <p style="margin: 5px 0;">
-                📧 <a href="mailto:contact@richadali.dev" style="color: #7B4397; text-decoration: none;">contact@richadali.dev</a>
+                Email: <a href="mailto:contact@richadali.dev" style="color: #7B4397; text-decoration: none;">contact@richadali.dev</a>
               </p>
               <p style="margin: 5px 0;">
-                📱 <a href="tel:+917002615524" style="color: #7B4397; text-decoration: none;">+91 7002615524</a>
+                Phone: <a href="tel:+917002615524" style="color: #7B4397; text-decoration: none;">+91 7002615524</a>
               </p>
             </div>
             
             <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="color: #999; font-size: 14px; margin: 0;">
+              <p style="color: #666; font-size: 14px; margin: 0;">
                 Best regards,<br>
-                <strong style="color: #7B4397;">Richad Ali</strong><br>
-                Software Developer
+                <strong style="color: #333;">Richad Ali</strong><br>
+                Software Engineer
               </p>
-              <p style="color: #adb5bd; font-size: 12px; margin: 15px 0 0 0;">
+              <p style="color: #999; font-size: 12px; margin: 15px 0 0 0;">
                 This is an automated response to confirm receipt of your message.
               </p>
             </div>
