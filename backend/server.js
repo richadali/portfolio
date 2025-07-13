@@ -6,8 +6,16 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 
+// Import blog functionality
+const { testConnection, initializeTables } = require("./config/database");
+const blogRoutes = require("./routes/blogRoutes");
+const BlogScheduler = require("./services/blogScheduler");
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Initialize blog scheduler
+const blogScheduler = new BlogScheduler();
 
 // Security middleware
 app.use(helmet());
@@ -81,6 +89,135 @@ app.get("/api/health", (req, res) => {
     message: "Server is running",
     timestamp: new Date().toISOString(),
   });
+});
+
+// Blog routes
+app.use("/api/blog", blogRoutes);
+
+// Blog scheduler endpoints
+app.get("/api/scheduler/status", (req, res) => {
+  try {
+    const status = blogScheduler.getStatus();
+    res.json({
+      success: true,
+      data: status,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error getting scheduler status",
+    });
+  }
+});
+
+app.post("/api/scheduler/generate-now", async (req, res) => {
+  try {
+    const { category, topic } = req.body;
+    const result = await blogScheduler.generateManualBlog(category, topic);
+
+    if (result.success) {
+      res.json({
+        success: true,
+        message: "Blog post generated successfully",
+        data: result.data,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to generate blog post",
+        error: result.error,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error generating blog post",
+    });
+  }
+});
+
+app.post("/api/scheduler/backlog", async (req, res) => {
+  try {
+    const { count = 3 } = req.body;
+    const results = await blogScheduler.generateContentBacklog(count);
+
+    res.json({
+      success: true,
+      message: `Generated ${results.length} blog posts`,
+      data: results,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error generating content backlog",
+    });
+  }
+});
+
+// Freepik AI test endpoint
+app.post("/api/freepik/test", async (req, res) => {
+  try {
+    const FreepikService = require("./services/freepikService");
+    const freepikService = new FreepikService();
+
+    const {
+      topic = "React Hooks Best Practices",
+      category = "react-frontend",
+    } = req.body;
+
+    console.log(`🧪 Testing Freepik AI image generation for topic: ${topic}`);
+
+    const result = await freepikService.testImageGeneration(topic);
+
+    if (result.status === "success") {
+      res.json({
+        success: true,
+        message: "Freepik AI image generated successfully",
+        data: {
+          topic,
+          category,
+          imageUrl: result.imageUrl,
+        },
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Freepik AI test failed",
+        error: result.message,
+        details: result.details,
+      });
+    }
+  } catch (error) {
+    console.error("❌ Freepik test endpoint error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Freepik AI test failed",
+      error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+});
+
+// Health check endpoint for Freepik API
+app.get("/api/freepik/health", async (req, res) => {
+  try {
+    const FreepikService = require("./services/freepikService");
+    const freepikService = new FreepikService();
+
+    const result = await freepikService.healthCheck();
+
+    if (result.status === "success") {
+      res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error("❌ Freepik health check error:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 });
 
 // Contact form endpoint
@@ -286,15 +423,68 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-  console.log(`📧 Email service configured for: ${process.env.ZOHO_EMAIL}`);
-  console.log(
-    `🌐 CORS enabled for: ${
-      process.env.FRONTEND_URL || "http://localhost:3000"
-    }`
-  );
+// Initialize database and start server
+const startServer = async () => {
+  try {
+    // Test database connection
+    console.log("🔌 Connecting to database...");
+    const dbConnected = await testConnection();
+
+    if (!dbConnected) {
+      console.error(
+        "❌ Failed to connect to database. Please check your database configuration."
+      );
+      process.exit(1);
+    }
+
+    // Initialize database tables
+    console.log("🏗️ Initializing database tables...");
+    await initializeTables();
+
+    // Start the blog scheduler
+    console.log("📅 Starting blog scheduler...");
+    blogScheduler.start();
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`📧 Email service configured for: ${process.env.ZOHO_EMAIL}`);
+      console.log(
+        `🌐 CORS enabled for: ${
+          process.env.FRONTEND_URL || "http://localhost:3000"
+        }`
+      );
+      console.log(
+        `📝 Blog API available at: http://localhost:${PORT}/api/blog`
+      );
+      console.log(
+        `⚡ Scheduler API available at: http://localhost:${PORT}/api/scheduler`
+      );
+      console.log("");
+      console.log("✅ Portfolio backend is ready!");
+      console.log(
+        "📊 Blog posts will be automatically generated daily at 9:00 AM IST"
+      );
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+// Handle graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("🛑 SIGTERM received, shutting down gracefully...");
+  blogScheduler.stop();
+  process.exit(0);
 });
+
+process.on("SIGINT", () => {
+  console.log("🛑 SIGINT received, shutting down gracefully...");
+  blogScheduler.stop();
+  process.exit(0);
+});
+
+startServer();
 
 module.exports = app;
