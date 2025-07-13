@@ -9,6 +9,7 @@ const useActiveSection = () => {
       { id: "skills", element: null },
       { id: "experience", element: null },
       { id: "projects", element: null },
+      { id: "blog", element: null },
       { id: "education", element: null },
       { id: "contact", element: null },
     ];
@@ -25,6 +26,8 @@ const useActiveSection = () => {
         element = document.getElementById("Experience");
       } else if (section.id === "projects") {
         element = document.getElementById("Projects");
+      } else if (section.id === "blog") {
+        element = document.getElementById("Blog");
       } else if (section.id === "education") {
         element = document.getElementById("Education");
       } else if (section.id === "contact") {
@@ -55,6 +58,7 @@ const useActiveSection = () => {
               Skills: "skills",
               Experience: "experience",
               Projects: "projects",
+              Blog: "blog",
               Education: "education",
               Contact: "contact",
             };
