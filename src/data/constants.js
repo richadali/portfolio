@@ -330,7 +330,7 @@ export const projects = [
     tags: ["Next.js", "Tailwind CSS", "Shadcn", "Google Gemini"],
     category: "ai",
     github: "",
-    webapp: "https://richadali.dev/ai-travel-planner",
+    webapp: "https://aitravelplanner.richadali.dev",
   },
   {
     id: 0,
