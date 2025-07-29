@@ -416,6 +416,16 @@ const Navbar = () => {
             Projects
           </NavLink>
           <NavLink 
+            href="#Blog"
+            $isActive={activeSection === 'blog'}
+            variants={linkVariants}
+            animate={activeSection === 'blog' ? 'active' : 'inactive'}
+            whileHover="hover"
+            onClick={(e) => handleScrollTo(e, 'Blog')}
+          >
+            Blog
+          </NavLink>
+          <NavLink 
             href="#Education"
             $isActive={activeSection === 'education'}
             variants={linkVariants}
@@ -488,6 +498,17 @@ const Navbar = () => {
                 $isActive={activeSection === 'projects'}
               >
                 Projects
+              </MobileNavLink>
+              <MobileNavLink 
+                variants={itemVariants}
+                onClick={(e) => {
+                  handleScrollTo(e, 'Blog');
+                  setIsOpen(false);
+                }} 
+                href="#Blog"
+                $isActive={activeSection === 'blog'}
+              >
+                Blog
               </MobileNavLink>
               <MobileNavLink 
                 variants={itemVariants}
