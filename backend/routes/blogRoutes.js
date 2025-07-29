@@ -191,42 +191,6 @@ router.get("/stats", async (req, res) => {
   }
 });
 
-// GET /api/blog/search - Search blog posts
-router.get("/search", validateQuery, async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: errors.array(),
-      });
-    }
-
-    const { q: query, limit = 10 } = req.query;
-
-    if (!query || query.trim().length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Search query is required",
-      });
-    }
-
-    const limitNum = parseInt(limit) || 10; // Fallback to 10 if parseInt returns NaN
-    const posts = await BlogModel.search(query.trim(), limitNum);
-
-    res.json({
-      success: true,
-      data: posts,
-    });
-  } catch (error) {
-    console.error("Error searching posts:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error searching posts",
-    });
-  }
-});
 
 // GET /api/blog/:slug - Get single blog post by slug
 router.get("/:slug", async (req, res) => {

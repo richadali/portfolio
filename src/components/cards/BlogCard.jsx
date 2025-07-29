@@ -15,15 +15,9 @@ const Card = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: all 0.5s ease-in-out;
   cursor: pointer;
   position: relative;
 
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 50px 4px rgba(0, 0, 0, 0.6);
-    filter: brightness(1.1);
-  }
 
   @media (max-width: 768px) {
     max-width: 400px;
@@ -32,28 +26,12 @@ const Card = styled(motion.div)`
   }
 `;
 
-const Image = styled.div`
+const Image = styled.img`
   width: 100%;
   height: 180px;
-  background: ${({ theme }) => `linear-gradient(135deg, ${theme.primary}20, ${theme.primary}05)`};
+  background-color: ${({ theme }) => theme.white};
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  
-  ${({ $hasImage, $imageUrl }) => $hasImage && `
-    background-image: url(${$imageUrl});
-    background-size: cover;
-    background-position: center;
-  `}
-`;
-
-const ImagePlaceholder = styled.div`
-  font-size: 48px;
-  color: ${({ theme }) => theme.primary};
-  opacity: 0.7;
+  box-shadow: 0 0 16px 2px rgba(0,0,0,0.3);
 `;
 
 const Tags = styled.div`
@@ -83,7 +61,7 @@ const Details = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: ${({ theme }) => theme.text_primary};
   overflow: hidden;
@@ -92,24 +70,28 @@ const Title = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
-  line-height: 1.3;
+  line-height: 1.4;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
 `;
 
 const Category = styled.div`
   font-size: 14px;
-  margin-left: 2px;
   font-weight: 400;
   color: ${({ theme }) => theme.primary};
-  margin-bottom: 8px;
   text-transform: capitalize;
 `;
 
 const DateText = styled.div`
   font-size: 12px;
-  margin-left: 2px;
   font-weight: 300;
   color: ${({ theme }) => theme.text_secondary + 80};
-  margin-bottom: 10px;
 `;
 
 const Description = styled.div`
@@ -147,29 +129,6 @@ const MetaItem = styled.div`
   }
 `;
 
-const ReadMoreButton = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, ${({ theme }) => theme.card});
-  padding: 30px 20px 20px;
-  text-align: center;
-  opacity: 0;
-  transition: all 0.3s ease;
-  
-  ${Card}:hover & {
-    opacity: 1;
-  }
-`;
-
-const ReadMore = styled.span`
-  color: ${({ theme }) => theme.primary};
-  font-weight: 500;
-  font-size: 14px;
-  text-decoration: underline;
-`;
-
 const AIBadge = styled.div`
   position: absolute;
   top: 10px;
@@ -182,6 +141,7 @@ const AIBadge = styled.div`
   font-weight: 500;
   backdrop-filter: blur(10px);
   border: 1px solid ${({ theme }) => theme.primary + 50};
+  z-index: 10;
 `;
 
 const BlogCard = ({ post }) => {
@@ -221,7 +181,12 @@ const BlogCard = ({ post }) => {
   return (
     <Card
       onClick={handleClick}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{
+        y: -10,
+        boxShadow: "0 0 50px 4px rgba(0, 0, 0, 0.6)",
+        filter: "brightness(1.1)",
+        transition: { duration: 0.3, ease: "easeOut" }
+      }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
@@ -235,38 +200,14 @@ const BlogCard = ({ post }) => {
       )}
 
       {/* Blog Image */}
-      <Image $hasImage={!!post.featured_image && !imageError} $imageUrl={post.featured_image}>
-        {(!post.featured_image || imageError) && (
-          <ImagePlaceholder>
-            📝
-          </ImagePlaceholder>
-        )}
-        {post.featured_image && !imageError && (
-          <img
-            src={post.featured_image}
-            alt={post.title}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '10px',
-              opacity: imageLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease'
-            }}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageError(true)}
-          />
-        )}
-      </Image>
+      <Image src={post.featured_image} />
 
       <Details>
-        {/* Category */}
-        <Category>{formatCategory(post.category)}</Category>
+        <Header>
+          <Category>{formatCategory(post.category)}</Category>
+          <DateText>{formatDate(post.published_at || post.created_at)}</DateText>
+        </Header>
         
-        {/* Date */}
-        <DateText>{formatDate(post.published_at || post.created_at)}</DateText>
-        
-        {/* Title */}
         <Title>{post.title}</Title>
         
         {/* Description/Excerpt */}
@@ -277,11 +218,11 @@ const BlogCard = ({ post }) => {
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <Tags>
-            {post.tags.slice(0, 3).map((tag, index) => (
+            {post.tags.slice(0, 2).map((tag, index) => (
               <Tag key={index}>{tag}</Tag>
             ))}
-            {post.tags.length > 3 && (
-              <Tag>+{post.tags.length - 3}</Tag>
+            {post.tags.length > 2 && (
+              <Tag>+{post.tags.length - 2}</Tag>
             )}
           </Tags>
         )}
@@ -300,10 +241,6 @@ const BlogCard = ({ post }) => {
         </MetaItem>
       </MetaInfo>
 
-      {/* Read More Overlay */}
-      <ReadMoreButton>
-        <ReadMore>Read Full Article →</ReadMore>
-      </ReadMoreButton>
     </Card>
   );
 };

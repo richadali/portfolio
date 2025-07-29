@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowBack, Schedule, Visibility, Share, BookmarkBorder } from "@mui/icons-material";
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
 import BlogCard from "../components/cards/BlogCard";
 
 const Container = styled.div`
@@ -12,7 +16,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 `;
 
@@ -65,7 +69,7 @@ const Category = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 700;
   color: ${({ theme }) => theme.text_primary};
   line-height: 1.2;
@@ -129,7 +133,7 @@ const Tag = styled.span`
 const Content = styled.div`
   color: ${({ theme }) => theme.text_primary};
   line-height: 1.8;
-  font-size: 18px;
+  font-size: 16px;
   
   h1, h2, h3, h4, h5, h6 {
     color: ${({ theme }) => theme.text_primary};
@@ -165,29 +169,6 @@ const Content = styled.div`
     font-style: italic;
   }
   
-  code {
-    background: ${({ theme }) => theme.primary + 20};
-    color: ${({ theme }) => theme.primary};
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
-  }
-  
-  pre {
-    background: ${({ theme }) => theme.bgLight};
-    padding: 20px;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 20px 0;
-    border: 1px solid ${({ theme }) => theme.primary + 30};
-    
-    code {
-      background: none;
-      color: ${({ theme }) => theme.text_primary};
-      padding: 0;
-    }
-  }
   
   a {
     color: ${({ theme }) => theme.primary};
@@ -369,21 +350,6 @@ const BlogPost = () => {
     }
   };
 
-  // Simple markdown-like rendering
-  const renderContent = (content) => {
-    if (!content) return '';
-    
-    return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code>$1</code>')
-      .replace(/### (.*?)(\n|$)/g, '<h3>$1</h3>')
-      .replace(/## (.*?)(\n|$)/g, '<h2>$1</h2>')
-      .replace(/# (.*?)(\n|$)/g, '<h1>$1</h1>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/^\s*/, '<p>')
-      .replace(/\s*$/, '</p>');
-  };
 
   if (loading) {
     return (
@@ -451,11 +417,32 @@ const BlogPost = () => {
             )}
           </Header>
 
-          <Content 
-            dangerouslySetInnerHTML={{ 
-              __html: renderContent(post.content) 
-            }} 
-          />
+          <Content>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || '');
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      style={vscDarkPlus}
+                      language={match[1]}
+                      PreTag="div"
+                      {...props}
+                    >
+                      {String(children).replace(/\n$/, '')}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
+          </Content>
 
           <ShareSection>
             <ShareButton onClick={handleShare}>

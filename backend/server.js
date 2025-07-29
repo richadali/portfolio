@@ -154,57 +154,57 @@ app.post("/api/scheduler/backlog", async (req, res) => {
   }
 });
 
-// Freepik AI test endpoint
-app.post("/api/freepik/test", async (req, res) => {
-  try {
-    const FreepikService = require("./services/freepikService");
-    const freepikService = new FreepikService();
+// Gemini AI image generation test endpoint
+  app.post("/api/gemini/image/test", async (req, res) => {
+    try {
+      const GeminiImageService = require("./services/geminiImageService");
+      const geminiImageService = new GeminiImageService();
 
     const {
       topic = "React Hooks Best Practices",
       category = "react-frontend",
     } = req.body;
 
-    console.log(`🧪 Testing Freepik AI image generation for topic: ${topic}`);
+    console.log(`🧪 Testing Gemini AI image generation for topic: ${topic}`);
 
-    const result = await freepikService.testImageGeneration(topic);
+    const result = await geminiImageService.testImageGeneration(topic);
 
     if (result.status === "success") {
       res.json({
         success: true,
-        message: "Freepik AI image generated successfully",
+        message: "Gemini AI image generated successfully",
         data: {
           topic,
           category,
-          imageUrl: result.imageUrl,
+          imageUrl: result.imageData,
         },
       });
     } else {
       res.status(500).json({
         success: false,
-        message: "Freepik AI test failed",
+        message: "Gemini AI test failed",
         error: result.message,
         details: result.details,
       });
     }
   } catch (error) {
-    console.error("❌ Freepik test endpoint error:", error);
+    console.error("❌ Gemini image test endpoint error:", error);
     res.status(500).json({
       success: false,
-      message: "Freepik AI test failed",
+      message: "Gemini AI test failed",
       error: error.message,
       stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 });
 
-// Health check endpoint for Freepik API
-app.get("/api/freepik/health", async (req, res) => {
+// Health check endpoint for Gemini Image API
+app.get("/api/gemini/image/health", async (req, res) => {
   try {
-    const FreepikService = require("./services/freepikService");
-    const freepikService = new FreepikService();
+    const GeminiImageService = require("./services/geminiImageService");
+    const geminiImageService = new GeminiImageService();
 
-    const result = await freepikService.healthCheck();
+    const result = await geminiImageService.healthCheck();
 
     if (result.status === "success") {
       res.json(result);
@@ -212,7 +212,7 @@ app.get("/api/freepik/health", async (req, res) => {
       res.status(500).json(result);
     }
   } catch (error) {
-    console.error("❌ Freepik health check error:", error);
+    console.error("❌ Gemini Image API health check error:", error);
     res.status(500).json({
       status: "error",
       message: error.message,

@@ -1,13 +1,13 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const FreepikService = require("./freepikService");
+const GeminiImageService = require("./geminiImageService");
 
 class GeminiService {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    // Initialize Freepik service for AI image generation
-    this.freepikService = new FreepikService();
+    // Initialize Gemini image service for AI image generation
+    this.geminiImageService = new GeminiImageService();
 
     // Configuration constants
     this.MAX_RETRIES = 3;
@@ -450,10 +450,10 @@ class GeminiService {
       data.tags = this.generateTagsFromTopic(topic, category);
     }
 
-    // Generate AI image using Freepik (async operation)
+    // Generate AI image using Gemini (async operation)
     try {
-      console.log("🎨 Generating AI image with Freepik...");
-      data.featured_image = await this.freepikService.generateBlogImage(
+      console.log("🎨 Generating AI image with Gemini...");
+      data.featured_image = await this.geminiImageService.generateBlogImage(
         topic,
         category,
         data.tags,
@@ -461,7 +461,7 @@ class GeminiService {
       );
     } catch (error) {
       console.warn(
-        "⚠️ Freepik image generation failed, using fallback:",
+        "⚠️ Gemini image generation failed, using fallback:",
         error.message
       );
       data.featured_image = this.generateFallbackImage(category);

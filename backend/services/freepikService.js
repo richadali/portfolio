@@ -6,7 +6,7 @@ class FreepikService {
     this.baseUrl = "https://api.freepik.com/v1/ai/mystic";
 
     if (!this.apiKey) {
-      console.warn("⚠️ FREEPIK_API_KEY not found in environment variables");
+      console.warn("⚠️ FREEPIK_API_KEY not found in environment variables (DEPRECATED - Using Gemini for image generation)");
     }
 
     // Configure axios instance with default headers

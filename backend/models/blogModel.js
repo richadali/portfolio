@@ -172,13 +172,13 @@ class BlogModel {
 
       // Get posts with safe ORDER BY clause
       const [posts] = await connection.execute(
-        `SELECT id, title, slug, excerpt, featured_image, meta_title, meta_description, 
+        `SELECT id, title, slug, excerpt, featured_image, meta_title, meta_description,
                 tags, category, views, reading_time, author, created_at, published_at
-         FROM blog_posts 
+         FROM blog_posts
          ${whereClause}
          ORDER BY ${safeSortBy} ${safeSortOrder}
-         LIMIT ? OFFSET ?`,
-        [...queryParams, limitValue, offset]
+         LIMIT ${limitValue} OFFSET ${offset}`,
+        queryParams
       );
 
       // Parse JSON tags
