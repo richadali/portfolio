@@ -75,14 +75,8 @@ class GeminiImageService {
               const base64Data = imageData.data;
               const imageBuffer = Buffer.from(base64Data, "base64");
 
-              const blogsDir = path.join(
-                __dirname,
-                "..",
-                "..",
-                "public",
-                "images",
-                "blogs"
-              );
+              const publicPath = process.env.FRONTEND_PUBLIC_PATH || path.join(__dirname, "..", "..", "public");
+              const blogsDir = path.join(publicPath, "images", "blogs");
               if (!fs.existsSync(blogsDir)) {
                 fs.mkdirSync(blogsDir, { recursive: true });
               }

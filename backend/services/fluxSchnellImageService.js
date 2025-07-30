@@ -40,14 +40,8 @@ class FluxSchnellImageService {
       const imageBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(imageBuffer);
 
-      const blogsDir = path.join(
-        __dirname,
-        "..",
-        "..",
-        "public",
-        "images",
-        "blogs"
-      );
+      const publicPath = process.env.FRONTEND_PUBLIC_PATH || path.join(__dirname, "..", "..", "public");
+      const blogsDir = path.join(publicPath, "images", "blogs");
       if (!fs.existsSync(blogsDir)) {
         fs.mkdirSync(blogsDir, { recursive: true });
       }
