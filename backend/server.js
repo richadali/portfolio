@@ -220,6 +220,70 @@ app.get("/api/gemini/image/health", async (req, res) => {
   }
 });
 
+// Flux AI image generation test endpoint
+app.post("/api/flux/image/test", async (req, res) => {
+  try {
+    const FluxSchnellImageService = require("./services/fluxSchnellImageService");
+    const fluxSchnellImageService = new FluxSchnellImageService();
+
+    const {
+      topic = "A futuristic cityscape",
+      category = "ai-ml",
+    } = req.body;
+
+    console.log(`🧪 Testing Flux AI image generation for topic: ${topic}`);
+
+    const result = await fluxSchnellImageService.generateBlogImage(topic, category);
+
+    if (result) {
+      res.json({
+        success: true,
+        message: "Flux AI image generated successfully",
+        data: {
+          topic,
+          category,
+          imageUrl: result,
+        },
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Flux AI test failed",
+      });
+    }
+  } catch (error) {
+    console.error("❌ Flux image test endpoint error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Flux AI test failed",
+      error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+});
+
+// Health check endpoint for Flux Image API
+app.get("/api/flux/image/health", async (req, res) => {
+  try {
+    const FluxSchnellImageService = require("./services/fluxSchnellImageService");
+    const fluxSchnellImageService = new FluxSchnellImageService();
+
+    const result = await fluxSchnellImageService.healthCheck();
+
+    if (result.status === "success") {
+      res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error("❌ Flux Image API health check error:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
 // Contact form endpoint
 app.post(
   "/api/contact",

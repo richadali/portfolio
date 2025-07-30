@@ -1,12 +1,17 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const GeminiImageService = require("./geminiImageService");
+const FluxSchnellImageService = require("./fluxSchnellImageService");
 const BlogModel = require("../models/blogModel");
 
 class GeminiService {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    this.geminiImageService = new GeminiImageService();
+    if (process.env.IMAGE_GENERATION_SERVICE === "flux") {
+      this.imageService = new FluxSchnellImageService();
+    } else {
+      this.imageService = new GeminiImageService();
+    }
     this.MAX_RETRIES = 3;
     this.RETRY_DELAY = 1000;
     this.usedTopics = new Set();
@@ -114,14 +119,15 @@ class GeminiService {
         ],
       },
     ];
-
   }
 
   async initialize() {
     console.log("Initializing GeminiService and populating used topics...");
     const used = await BlogModel.getUsedTopics();
     this.usedTopics = new Set(used);
-    console.log(`✅ Populated ${this.usedTopics.size} used topics from database.`);
+    console.log(
+      `✅ Populated ${this.usedTopics.size} used topics from database.`
+    );
   }
 
   // Get a random topic that hasn't been used recently
@@ -281,6 +287,7 @@ class GeminiService {
         "meta_description": "SEO meta description (max 160 characters)",
         "tags": ["array", "of", "relevant", "technical", "tags"],
         "image_prompt": "A detailed, descriptive prompt for an AI image generator. Describe a visually appealing scene that captures the essence of the blog post. Include style notes like 'professional tech illustration', '4k resolution', 'modern aesthetic', 'landscape orientation, 16:9 aspect ratio, suitable for blog thumbnail'.",
+        "aspect_ratio": "16:9",
         "reading_time": 5
       }
       
@@ -462,9 +469,10 @@ class GeminiService {
     // Generate AI image using Gemini (async operation)
     try {
       console.log("🎨 Generating AI image with Gemini...");
-      data.featured_image = await this.geminiImageService.generateBlogImage(
+      data.featured_image = await this.imageService.generateBlogImage(
         data.image_prompt,
-        category
+        category,
+        data.aspect_ratio
       );
     } catch (error) {
       console.warn(
