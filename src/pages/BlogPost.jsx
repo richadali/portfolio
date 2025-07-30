@@ -12,7 +12,7 @@ import BlogCard from "../components/cards/BlogCard";
 const Container = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.bg};
-  padding: 100px 20px 50px;
+  padding: 50px 20px 50px;
 `;
 
 const Wrapper = styled.div`

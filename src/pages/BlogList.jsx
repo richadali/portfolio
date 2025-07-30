@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import BlogCard from "../components/cards/BlogCard";
-import { Search, FilterList, ArrowBack } from "@mui/icons-material";
+import { Search, FilterList, ArrowBack, ArrowDropDown } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.bg};
-  padding: 100px 20px 50px;
+  padding: 50px 20px 50px;
 `;
 
 const Wrapper = styled.div`
@@ -120,14 +120,32 @@ const FilterContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+const SelectWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const DropdownArrow = styled(ArrowDropDown)`
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.text_secondary};
+  pointer-events: none;
+`;
+
 const CategoryFilter = styled.select`
-  padding: 10px 15px;
+  padding: 10px 30px 10px 15px;
   border: 1px solid ${({ theme }) => theme.primary + 50};
   border-radius: 8px;
   background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
   font-size: 14px;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   
   &:focus {
     outline: none;
@@ -141,13 +159,16 @@ const CategoryFilter = styled.select`
 `;
 
 const SortFilter = styled.select`
-  padding: 10px 15px;
+  padding: 10px 30px 10px 15px;
   border: 1px solid ${({ theme }) => theme.primary + 50};
   border-radius: 8px;
   background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
   font-size: 14px;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   
   &:focus {
     outline: none;
@@ -261,24 +282,11 @@ const BlogList = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentPage, selectedCategory, sortBy, sortOrder]);
+  }, [currentPage, selectedCategory, sortBy, sortOrder, searchTerm]);
 
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  // Debounced search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm) {
-        performSearch();
-      } else {
-        fetchPosts();
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
 
   const fetchPosts = async () => {
     try {
@@ -298,6 +306,9 @@ const BlogList = () => {
 
       if (selectedCategory) {
         params.append('category', selectedCategory);
+      }
+      if (searchTerm) {
+        params.append('search', searchTerm);
       }
 
       const response = await fetch(`${baseURL}/api/blog?${params}`);
@@ -334,27 +345,6 @@ const BlogList = () => {
     }
   };
 
-  const performSearch = async () => {
-    try {
-      setLoading(true);
-      const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://api.richadali.dev' 
-        : 'http://localhost:3001';
-        
-      const response = await fetch(`${baseURL}/api/blog/search?q=${encodeURIComponent(searchTerm)}&limit=20`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        setPosts(data.data);
-        setPagination({ current_page: 1, total_pages: 1, total_posts: data.data.length });
-      }
-    } catch (err) {
-      console.error('Error searching posts:', err);
-      setError('Search failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -456,27 +446,32 @@ const BlogList = () => {
           </SearchContainer>
 
           <FilterContainer>
-            <CategoryFilter
-              value={selectedCategory}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.slug} value={category.slug}>
-                  {category.name} ({category.post_count})
-                </option>
-              ))}
-            </CategoryFilter>
-
-            <SortFilter
-              value={sortBy}
-              onChange={(e) => handleSortChange(e.target.value)}
-            >
-              <option value="published_at">Latest</option>
-              <option value="views">Most Popular</option>
-              <option value="title">Title A-Z</option>
-              <option value="reading_time">Reading Time</option>
-            </SortFilter>
+            <SelectWrapper>
+              <CategoryFilter
+                value={selectedCategory}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.slug} value={category.slug}>
+                    {category.name} ({category.post_count})
+                  </option>
+                ))}
+              </CategoryFilter>
+              <DropdownArrow />
+            </SelectWrapper>
+            <SelectWrapper>
+              <SortFilter
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="published_at">Latest</option>
+                <option value="views">Most Popular</option>
+                <option value="title">Title A-Z</option>
+                <option value="reading_time">Reading Time</option>
+              </SortFilter>
+              <DropdownArrow />
+            </SelectWrapper>
           </FilterContainer>
         </FilterSection>
 
