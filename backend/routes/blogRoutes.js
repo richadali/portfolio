@@ -5,8 +5,15 @@ const GeminiService = require("../services/geminiService");
 const { body, validationResult, query } = require("express-validator");
 const rateLimit = require("express-rate-limit");
 
-// Initialize Gemini service
-const geminiService = new GeminiService();
+// Asynchronous factory for Gemini service
+const createGeminiService = async () => {
+  const service = new GeminiService();
+  await service.initialize();
+  return service;
+};
+
+// We will initialize this in an async IIFE or a start function
+let geminiService;
 
 // Rate limiting for AI generation
 const aiGenerationLimiter = rateLimit({
@@ -120,10 +127,34 @@ router.get("/", validateQuery, async (req, res) => {
 // GET /api/blog/categories - Get all blog categories
 router.get("/categories", async (req, res) => {
   try {
-    const categories = await BlogModel.getCategories();
+    // 1. Get all possible categories from the single source of truth
+    const allCategories = geminiService.getCategories();
+
+    // 2. Get post counts for existing categories
+    const categoriesWithCounts = await BlogModel.getCategoriesWithCounts();
+
+    // 3. Create a map for quick lookup
+    const countsMap = new Map(
+      categoriesWithCounts.map((c) => [c.slug, c.post_count])
+    );
+
+    // 4. Merge the data, ensuring all categories are included
+    const finalCategories = allCategories.map((category) => ({
+      ...category,
+      post_count: countsMap.get(category.slug) || 0,
+    }));
+
+    // 5. Sort by post count (desc) and then by name (asc)
+    finalCategories.sort((a, b) => {
+      if (b.post_count !== a.post_count) {
+        return b.post_count - a.post_count;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
     res.json({
       success: true,
-      data: categories,
+      data: finalCategories,
     });
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -267,6 +298,9 @@ router.post("/", validateBlogPost, async (req, res) => {
 
 // POST /api/blog/generate - Generate blog post using AI
 router.post("/generate", aiGenerationLimiter, async (req, res) => {
+  if (!geminiService) {
+    return res.status(503).json({ success: false, message: "Service not ready" });
+  }
   try {
     const { topic, category } = req.body;
 
@@ -304,6 +338,9 @@ router.post("/generate", aiGenerationLimiter, async (req, res) => {
 
 // POST /api/blog/generate/multiple - Generate multiple blog posts
 router.post("/generate/multiple", aiGenerationLimiter, async (req, res) => {
+  if (!geminiService) {
+    return res.status(503).json({ success: false, message: "Service not ready" });
+  }
   try {
     const { count = 3 } = req.body;
 
@@ -347,6 +384,9 @@ router.post("/generate/multiple", aiGenerationLimiter, async (req, res) => {
 
 // GET /api/blog/generate/titles - Generate title suggestions
 router.get("/generate/titles", async (req, res) => {
+  if (!geminiService) {
+    return res.status(503).json({ success: false, message: "Service not ready" });
+  }
   try {
     const { topic, count = 5 } = req.query;
 
@@ -377,6 +417,9 @@ router.get("/generate/titles", async (req, res) => {
 
 // GET /api/blog/ai/categories - Get AI service categories
 router.get("/ai/categories", async (req, res) => {
+  if (!geminiService) {
+    return res.status(503).json({ success: false, message: "Service not ready" });
+  }
   try {
     const categories = geminiService.getCategories();
     res.json({
@@ -394,6 +437,9 @@ router.get("/ai/categories", async (req, res) => {
 
 // POST /api/blog/ai/reset - Reset used topics (for testing)
 router.post("/ai/reset", async (req, res) => {
+  if (!geminiService) {
+    return res.status(503).json({ success: false, message: "Service not ready" });
+  }
   try {
     geminiService.resetUsedTopics();
     res.json({
@@ -408,5 +454,10 @@ router.post("/ai/reset", async (req, res) => {
     });
   }
 });
+
+// Initialize the service once and export the router
+(async () => {
+  geminiService = await createGeminiService();
+})();
 
 module.exports = router;

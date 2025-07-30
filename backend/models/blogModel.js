@@ -313,20 +313,18 @@ class BlogModel {
     }
   }
 
-  // Get blog categories
-  static async getCategories() {
+  // Get blog categories with post counts
+  static async getCategoriesWithCounts() {
     const connection = await pool.getConnection();
-
     try {
-      const [categories] = await connection.execute(
-        `SELECT bc.*, COUNT(bp.id) as post_count 
-         FROM blog_categories bc 
-         LEFT JOIN blog_posts bp ON bc.slug = bp.category AND bp.status = 'published'
-         GROUP BY bc.id 
-         ORDER BY bc.name`
+      const [results] = await connection.execute(
+        `SELECT category as slug, COUNT(*) as post_count
+         FROM blog_posts
+         WHERE status = 'published'
+         GROUP BY category
+         ORDER BY post_count DESC`
       );
-
-      return categories;
+      return results;
     } finally {
       connection.release();
     }
@@ -465,6 +463,19 @@ class BlogModel {
         ...stats[0],
         recent_views: recentViews[0].recent_views,
       };
+    } finally {
+      connection.release();
+    }
+  }
+
+  // Get all used topics (AI prompts)
+  static async getUsedTopics() {
+    const connection = await pool.getConnection();
+    try {
+      const [rows] = await connection.execute(
+        "SELECT DISTINCT ai_prompt FROM blog_posts WHERE ai_prompt IS NOT NULL"
+      );
+      return rows.map((row) => row.ai_prompt);
     } finally {
       connection.release();
     }

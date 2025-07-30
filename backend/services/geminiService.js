@@ -1,119 +1,127 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const GeminiImageService = require("./geminiImageService");
+const BlogModel = require("../models/blogModel");
 
 class GeminiService {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    // Initialize Gemini image service for AI image generation
     this.geminiImageService = new GeminiImageService();
-
-    // Configuration constants
     this.MAX_RETRIES = 3;
     this.RETRY_DELAY = 1000;
-
-    // Topic pool for diverse content generation
+    this.usedTopics = new Set();
     this.topicPool = [
       // Web Development
       {
         category: "web-development",
         topics: [
           "Modern CSS Features and Best Practices",
-          "Progressive Web Apps Development",
-          "Web Performance Optimization Techniques",
-          "Responsive Design Patterns",
-          "Browser Security and HTTPS Implementation",
-          "Web Accessibility Guidelines and Implementation",
-          "JavaScript ES6+ Features and Usage",
-          "Webpack and Build Tools Configuration",
-          "Cross-Browser Compatibility Strategies",
-          "Web Components and Custom Elements",
+          "Progressive Web Apps",
+          "Web Performance Optimization",
+          "Responsive Design Patterns for Modern Devices",
+          "JavaScript ESNext: What's New and How to Use It",
+          "Building Accessible Web Applications (WCAG)",
+          "Cross-Browser Compatibility in 2025",
+          "Thymeleaf for Server-Side Rendering",
+          "Integrating Google Maps API into Web Apps",
         ],
       },
-      // React & Frontend
+      // Frontend & UI/UX
       {
-        category: "react-frontend",
+        category: "frontend-ux",
         topics: [
-          "React Hooks Best Practices and Patterns",
-          "State Management with Redux and Context API",
-          "React Performance Optimization Techniques",
-          "Server-Side Rendering with Next.js",
-          "React Testing Strategies and Tools",
-          "Component Architecture and Design Patterns",
-          "React Router and Navigation Patterns",
-          "Form Handling and Validation in React",
-          "React Error Boundaries and Error Handling",
-          "Custom Hooks Development and Reusability",
+          "Choosing a Frontend Framework: React vs. Angular vs. Vue",
+          "State Management in Large-Scale Applications",
+          "Building Design Systems with Material UI or Shadcn UI",
+          "Mobile App Development with Flutter: A Beginner's Guide",
+          "UI/UX Principles for Developers",
+          "Optimizing Frontend Performance and Load Times",
+          "Creating Custom UI Components",
+          "The Rise of Micro-Frontends",
+          "Form Handling and Validation Best Practices",
         ],
       },
       // Backend & APIs
       {
         category: "backend-apis",
         topics: [
-          "RESTful API Design Principles",
-          "GraphQL vs REST API Comparison",
-          "Database Optimization and Indexing",
-          "Authentication and Authorization Strategies",
-          "Microservices Architecture Patterns",
-          "API Rate Limiting and Security",
-          "Caching Strategies for Backend Systems",
-          "Message Queues and Asynchronous Processing",
-          "Database Migration and Schema Management",
-          "API Documentation and OpenAPI Specification",
+          "Building RESTful APIs with SpringBoot",
+          "Getting Started with PHP and Laravel",
+          "GraphQL vs. REST: Which is Right for Your Project?",
+          "Database Showdown: MySQL vs. PostgreSQL vs. MongoDB",
+          "Microservices Architecture with SpringBoot",
+          "Authentication and Authorization in Modern Apps (OAuth, JWT)",
+          "API Security Best Practices",
+          "Using Scala for High-Performance Backend Systems",
+          "Integrating with Firebase for Real-time Data",
         ],
       },
       // DevOps & Cloud
       {
         category: "devops-cloud",
         topics: [
-          "Docker Containerization Best Practices",
-          "Kubernetes Deployment Strategies",
-          "CI/CD Pipeline Implementation",
-          "Infrastructure as Code with Terraform",
-          "Monitoring and Logging in Production",
-          "Cloud Security and Compliance",
-          "Auto-scaling and Load Balancing",
-          "Backup and Disaster Recovery Strategies",
-          "Blue-Green Deployment Techniques",
-          "Cloud Cost Optimization Strategies",
+          "Introduction to CI/CD with Git and Docker",
+          "Deploying Applications on AWS EC2",
+          "Managing Infrastructure as Code with Google Cloud",
+          "Web Server Configuration: Apache vs. Nginx",
+          "Containerization with Docker: A Practical Guide",
+          "Monitoring and Logging for Production Systems",
+          "Cloud Security Fundamentals",
+          "Setting up an Ubuntu Server for Web Hosting",
+          "Load Balancing Strategies in AWS",
+        ],
+      },
+      // E-commerce & CMS
+      {
+        category: "ecommerce-cms",
+        topics: [
+          "Building an E-commerce Site with Shopify",
+          "Customizing Magento for Enterprise E-commerce",
+          "Headless WordPress with a Modern Frontend",
+          "Integrating Payment Gateways: Razorpay vs. Billdesk",
+          "Managing Inventory Across Multiple Platforms",
+          "The Pros and Cons of Different CMS Platforms",
+          "SEO for E-commerce Websites",
+          "Building a Custom Ticketing System with Chatwoot",
         ],
       },
       // AI & Machine Learning
       {
         category: "ai-ml",
         topics: [
-          "Introduction to Machine Learning for Developers",
-          "AI Integration in Web Applications",
-          "Natural Language Processing with JavaScript",
-          "Computer Vision in Web Development",
-          "Ethical AI Development Practices",
-          "ML Model Deployment and Serving",
-          "AI-Powered Code Generation Tools",
-          "Chatbot Development with AI",
-          "Recommendation Systems Implementation",
-          "AI in Frontend Development",
+          "Integrating Google Gemini into Your Applications",
+          "Building AI-Powered Features for Web Apps",
+          "Natural Language Processing for Developers",
+          "Introduction to Machine Learning Concepts",
+          "Ethical Considerations in AI Development",
+          "Using AI for Code Generation and Assistance",
+          "Creating a Simple Chatbot with AI",
+          "The Future of AI in Software Development",
         ],
       },
       // Career & Tips
       {
         category: "career-tips",
         topics: [
-          "Code Review Best Practices",
-          "Developer Productivity Tips and Tools",
-          "Building a Strong Developer Portfolio",
-          "Remote Work Strategies for Developers",
-          "Technical Interview Preparation",
-          "Open Source Contribution Guide",
-          "Developer Career Progression Paths",
+          "Effective Code Review Practices",
+          "Tools for Developer Productivity",
+          "How to Build a Strong Developer Portfolio",
+          "Navigating a Career as a Full-Stack Developer",
+          "Preparing for Technical Interviews",
+          "Contributing to Open Source Projects",
           "Learning New Technologies Effectively",
-          "Building Professional Network as Developer",
-          "Time Management for Software Developers",
+          "Time Management for Software Engineers",
         ],
       },
     ];
 
-    this.usedTopics = new Set(); // Track used topics to avoid repetition
+  }
+
+  async initialize() {
+    console.log("Initializing GeminiService and populating used topics...");
+    const used = await BlogModel.getUsedTopics();
+    this.usedTopics = new Set(used);
+    console.log(`✅ Populated ${this.usedTopics.size} used topics from database.`);
   }
 
   // Get a random topic that hasn't been used recently
@@ -272,7 +280,7 @@ class GeminiService {
         "meta_title": "SEO optimized title (max 60 characters)",
         "meta_description": "SEO meta description (max 160 characters)",
         "tags": ["array", "of", "relevant", "technical", "tags"],
-        "featured_image": "suggested image description for this topic",
+        "image_prompt": "A detailed, descriptive prompt for an AI image generator. Describe a visually appealing scene that captures the essence of the blog post. Include style notes like 'professional tech illustration', '4k resolution', 'modern aesthetic', 'landscape orientation, 16:9 aspect ratio, suitable for blog thumbnail'.",
         "reading_time": 5
       }
       
@@ -283,6 +291,7 @@ class GeminiService {
       4. Make the content substantial and valuable
       5. Include code examples where appropriate
       6. Add proper markdown formatting in the content field
+      7. DO NOT repeat the title in the 'content' field. The content should start with the first paragraph.
     `;
   }
 
@@ -454,10 +463,8 @@ class GeminiService {
     try {
       console.log("🎨 Generating AI image with Gemini...");
       data.featured_image = await this.geminiImageService.generateBlogImage(
-        topic,
-        category,
-        data.tags,
-        data.excerpt
+        data.image_prompt,
+        category
       );
     } catch (error) {
       console.warn(
@@ -779,11 +786,31 @@ class GeminiService {
     }
   }
 
+  // Helper to format slug into a display name
+  formatCategoryName(slug) {
+    const specialCases = {
+      "ai-ml": "AI & Machine Learning",
+      "backend-apis": "Backend & APIs",
+      "frontend-ux": "Frontend & UI/UX",
+      "devops-cloud": "DevOps & Cloud",
+      "career-tips": "Career & Tips",
+      "web-development": "Web Development",
+      "ecommerce-cms": "E-commerce & CMS",
+    };
+    return (
+      specialCases[slug] ||
+      slug
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    );
+  }
+
   // Get available categories
   getCategories() {
     return this.topicPool.map((cat) => ({
-      category: cat.category,
-      topicCount: cat.topics.length,
+      slug: cat.category,
+      name: this.formatCategoryName(cat.category),
     }));
   }
 

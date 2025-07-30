@@ -4,15 +4,28 @@ const BlogModel = require("../models/blogModel");
 
 class BlogScheduler {
   constructor() {
-    this.geminiService = new GeminiService();
+    this.geminiService = null; // Will be initialized asynchronously
     this.isRunning = false;
     this.lastRun = null;
     this.nextRun = null;
     this.dailyTask = null;
+    this.isInitialized = false;
+  }
+
+  async initialize() {
+    if (this.isInitialized) return;
+    this.geminiService = new GeminiService();
+    await this.geminiService.initialize();
+    this.isInitialized = true;
+    console.log("✅ BlogScheduler initialized with GeminiService.");
   }
 
   // Start the daily blog generation scheduler
-  start() {
+  async start() {
+    if (!this.isInitialized) {
+      await this.initialize();
+    }
+
     if (this.isRunning) {
       console.log("📅 Blog scheduler is already running");
       return;
@@ -163,14 +176,7 @@ class BlogScheduler {
 
   // Select category for today based on day of week
   selectCategoryForToday() {
-    const categories = [
-      "web-development",
-      "react-frontend",
-      "backend-apis",
-      "devops-cloud",
-      "ai-ml",
-      "career-tips",
-    ];
+    const categories = this.geminiService.getCategories().map(c => c.slug);
 
     const dayOfWeek = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
 
@@ -259,14 +265,7 @@ class BlogScheduler {
     console.log(`🎯 Generating content backlog (${count} posts)`);
 
     const results = [];
-    const categories = [
-      "web-development",
-      "react-frontend",
-      "backend-apis",
-      "devops-cloud",
-      "ai-ml",
-      "career-tips",
-    ];
+    const categories = this.geminiService.getCategories().map(c => c.slug);
 
     for (let i = 0; i < count; i++) {
       try {

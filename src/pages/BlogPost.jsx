@@ -12,7 +12,7 @@ import BlogCard from "../components/cards/BlogCard";
 const Container = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.bg};
-  padding: 50px 20px 50px;
+  padding: 40px 16px 50px;
 `;
 
 const Wrapper = styled.div`
@@ -47,7 +47,7 @@ const Article = styled.article`
   margin-bottom: 50px;
   
   @media (max-width: 768px) {
-    padding: 30px 20px;
+    padding: 24px 16px;
   }
 `;
 
@@ -76,7 +76,7 @@ const Title = styled.h1`
   margin-bottom: 20px;
   
   @media (max-width: 768px) {
-    font-size: 36px;
+    font-size: 30px;
   }
 `;
 
@@ -89,7 +89,7 @@ const MetaInfo = styled.div`
   flex-wrap: wrap;
   
   @media (max-width: 768px) {
-    gap: 20px;
+    gap: 16px;
   }
 `;
 
@@ -98,7 +98,7 @@ const MetaItem = styled.div`
   align-items: center;
   gap: 6px;
   color: ${({ theme }) => theme.text_secondary};
-  font-size: 14px;
+  font-size: 13px;
   
   svg {
     font-size: 18px;
@@ -126,7 +126,7 @@ const Tag = styled.span`
   color: ${({ theme }) => theme.primary};
   padding: 4px 12px;
   border-radius: 16px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
 `;
 
@@ -189,10 +189,10 @@ const Content = styled.div`
   @media (max-width: 768px) {
     font-size: 16px;
     
-    h1 { font-size: 28px; }
-    h2 { font-size: 24px; }
-    h3 { font-size: 20px; }
-    h4 { font-size: 18px; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 16px; }
   }
 `;
 

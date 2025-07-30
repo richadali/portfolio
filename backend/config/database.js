@@ -66,18 +66,6 @@ const initializeTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
 
-    // Create blog_categories table
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS blog_categories (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) UNIQUE NOT NULL,
-        slug VARCHAR(100) UNIQUE NOT NULL,
-        description TEXT,
-        color VARCHAR(7) DEFAULT '#854CE6',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    `);
-
     // Create blog_views table for analytics
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS blog_views (
@@ -91,17 +79,6 @@ const initializeTables = async () => {
         INDEX idx_post_id (post_id),
         INDEX idx_viewed_at (viewed_at)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    `);
-
-    // Insert default categories
-    await connection.execute(`
-      INSERT IGNORE INTO blog_categories (name, slug, description, color) VALUES
-      ('Web Development', 'web-development', 'Articles about modern web development technologies and best practices', '#854CE6'),
-      ('React & Frontend', 'react-frontend', 'Deep dives into React, modern frontend frameworks and UI/UX', '#61DAFB'),
-      ('Backend & APIs', 'backend-apis', 'Server-side development, APIs, databases and system architecture', '#339933'),
-      ('DevOps & Cloud', 'devops-cloud', 'Deployment strategies, cloud platforms, and infrastructure as code', '#FF9900'),
-      ('AI & Machine Learning', 'ai-ml', 'Artificial Intelligence, Machine Learning, and emerging technologies', '#FF6B6B'),
-      ('Career & Tips', 'career-tips', 'Programming tips, career advice, and software development insights', '#4ECDC4')
     `);
 
     console.log("✅ Database tables initialized successfully");

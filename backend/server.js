@@ -446,7 +446,7 @@ const startServer = async () => {
 
     // Start the blog scheduler
     console.log("📅 Starting blog scheduler...");
-    blogScheduler.start();
+    await blogScheduler.start();
 
     // Start server
     app.listen(PORT, () => {

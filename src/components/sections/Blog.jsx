@@ -61,8 +61,8 @@ const ToggleButtonGroup = styled.div`
   margin: 22px 0;
   @media (max-width: 768px) {
     font-size: 12px;
-    flex-wrap: wrap;
-    gap: 4px;
+    justify-content: center;
+    gap: 6px;
   }
 `;
 
@@ -75,7 +75,7 @@ const ToggleButton = styled.div`
     background: ${({ theme }) => theme.primary + 20};
   }
   @media (max-width: 768px) {
-    padding: 6px 12px;
+    padding: 6px 8px;
     border-radius: 4px;
     font-size: 11px;
   }
@@ -160,14 +160,16 @@ const ViewAllButton = styled(motion.button)`
 `;
 
 const StatsContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin: 20px 0;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: 100%;
+  max-width: 600px;
   
   @media (max-width: 768px) {
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 `;
 
@@ -181,7 +183,7 @@ const StatItem = styled.div`
   border: 1px solid ${({ theme }) => theme.primary + 30};
   
   @media (max-width: 768px) {
-    padding: 10px 15px;
+    padding: 10px 5px;
   }
 `;
 
@@ -192,7 +194,7 @@ const StatNumber = styled.div`
   margin-bottom: 5px;
   
   @media (max-width: 768px) {
-    font-size: 20px;
+    font-size: 18px;
   }
 `;
 
@@ -200,6 +202,9 @@ const StatLabel = styled.div`
   font-size: 14px;
   color: ${({ theme }) => theme.text_secondary};
   text-align: center;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const Blog = () => {

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.bg};
-  padding: 50px 20px 50px;
+  padding: 40px 16px 50px;
 `;
 
 const Wrapper = styled.div`
@@ -47,13 +47,16 @@ const Title = styled.h1`
   margin-bottom: 15px;
   
   @media (max-width: 768px) {
-    font-size: 36px;
+    font-size: 30px;
   }
 `;
 
 const Subtitle = styled.p`
   font-size: 18px;
   color: ${({ theme }) => theme.text_secondary};
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
@@ -91,7 +94,7 @@ const SearchInput = styled.input`
   border-radius: 8px;
   background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
-  font-size: 16px;
+  font-size: 15px;
   
   &:focus {
     outline: none;
@@ -118,6 +121,13 @@ const FilterContainer = styled.div`
   gap: 15px;
   align-items: center;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
 `;
 
 const SelectWrapper = styled.div`
@@ -136,12 +146,13 @@ const DropdownArrow = styled(ArrowDropDown)`
 `;
 
 const CategoryFilter = styled.select`
+  width: 100%;
   padding: 10px 30px 10px 15px;
   border: 1px solid ${({ theme }) => theme.primary + 50};
   border-radius: 8px;
   background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -155,16 +166,21 @@ const CategoryFilter = styled.select`
   option {
     background: ${({ theme }) => theme.card};
     color: ${({ theme }) => theme.text_primary};
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
   }
 `;
 
 const SortFilter = styled.select`
+  width: 100%;
   padding: 10px 30px 10px 15px;
   border: 1px solid ${({ theme }) => theme.primary + 50};
   border-radius: 8px;
   background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text_primary};
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
@@ -178,6 +194,10 @@ const SortFilter = styled.select`
   option {
     background: ${({ theme }) => theme.card};
     color: ${({ theme }) => theme.text_primary};
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
   }
 `;
 
@@ -222,6 +242,7 @@ const PostsGrid = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 20px;
+    justify-items: center;
   }
 `;
 
