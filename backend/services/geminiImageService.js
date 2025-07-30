@@ -1,21 +1,21 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 class GeminiImageService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
-    
+
     if (!this.apiKey) {
       console.warn("⚠️ GEMINI_API_KEY not found in environment variables");
     }
-    
+
     this.genAI = new GoogleGenerativeAI(this.apiKey);
     this.model = this.genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-preview-image-generation",
+      model: "gemini-2.0-flash-exp",
       generationConfig: {
-        responseModalities: ["IMAGE", "TEXT"]
-      }
+        responseModalities: ["IMAGE", "TEXT"],
+      },
     });
   }
 
@@ -29,19 +29,19 @@ class GeminiImageService {
     try {
       console.log(`🎨 Generating AI image with Gemini...`);
       console.log(`📝 Image prompt: "${imagePrompt}"`);
-      
+
       // Generate image using Gemini with explicit image request
       const result = await this.model.generateContent({
-        contents: [{
-          role: "user",
-          parts: [
-            { text: `Please generate an image for: ${imagePrompt}` }
-          ]
-        }]
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: `Please generate an image for: ${imagePrompt}` }],
+          },
+        ],
       });
-      
+
       const response = await result.response;
-      
+
       // Log the full response for debugging
       const sanitizedResponse = JSON.parse(JSON.stringify(response));
       if (sanitizedResponse.candidates) {
@@ -55,29 +55,43 @@ class GeminiImageService {
           }
         }
       }
-      console.log("Full Gemini response (sanitized):", JSON.stringify(sanitizedResponse, null, 2));
-      
+      console.log(
+        "Full Gemini response (sanitized):",
+        JSON.stringify(sanitizedResponse, null, 2)
+      );
+
       // Extract image data from response
       if (response.candidates && response.candidates.length > 0) {
         const candidate = response.candidates[0];
-        if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+        if (
+          candidate.content &&
+          candidate.content.parts &&
+          candidate.content.parts.length > 0
+        ) {
           for (const part of candidate.content.parts) {
             if (part.inlineData) {
               // Return data URI for the image
               const imageData = part.inlineData;
               const base64Data = imageData.data;
-              const imageBuffer = Buffer.from(base64Data, 'base64');
-  
-              const blogsDir = path.join(__dirname, '..', '..', 'public', 'images', 'blogs');
+              const imageBuffer = Buffer.from(base64Data, "base64");
+
+              const blogsDir = path.join(
+                __dirname,
+                "..",
+                "..",
+                "public",
+                "images",
+                "blogs"
+              );
               if (!fs.existsSync(blogsDir)) {
                 fs.mkdirSync(blogsDir, { recursive: true });
               }
-  
+
               const imageName = `blog-${Date.now()}.png`;
               const imagePath = path.join(blogsDir, imageName);
-  
+
               fs.writeFileSync(imagePath, imageBuffer);
-  
+
               const imageUrl = `/images/blogs/${imageName}`;
               console.log(`✅ Image saved successfully: ${imageUrl}`);
               return imageUrl;
@@ -85,16 +99,18 @@ class GeminiImageService {
           }
         }
       }
-      
+
       throw new Error("No image data found in Gemini response");
     } catch (error) {
-      console.error("❌ Failed to generate AI image with Gemini:", error.message);
-      
+      console.error(
+        "❌ Failed to generate AI image with Gemini:",
+        error.message
+      );
+
       // Return fallback image on error
       return this.getFallbackImage(category);
     }
   }
-
 
   /**
    * Get fallback image when AI generation fails
@@ -133,16 +149,20 @@ class GeminiImageService {
 
       // Simple test generation
       const result = await this.model.generateContent({
-        contents: [{
-          role: "user",
-          parts: [
-            { text: "Please generate an image for: simple technology illustration" }
-          ]
-        }]
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "Please generate an image for: simple technology illustration",
+              },
+            ],
+          },
+        ],
       });
-      
+
       const response = await result.response;
-      
+
       if (response.candidates && response.candidates.length > 0) {
         return {
           status: "success",
