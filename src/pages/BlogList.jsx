@@ -315,7 +315,7 @@ const BlogList = () => {
       setError(null);
 
       const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://api.richadali.dev' 
+        ? 'https://richadali.dev' 
         : 'http://localhost:3001';
 
       const params = new URLSearchParams({
@@ -353,7 +353,7 @@ const BlogList = () => {
   const fetchCategories = async () => {
     try {
       const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://api.richadali.dev' 
+        ? 'https://richadali.dev' 
         : 'http://localhost:3001';
         
       const response = await fetch(`${baseURL}/api/blog/categories`);

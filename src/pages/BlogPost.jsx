@@ -293,7 +293,7 @@ const BlogPost = () => {
       setError(null);
 
       const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://api.richadali.dev' 
+        ? 'https://richadali.dev' 
         : 'http://localhost:3001';
 
       const response = await fetch(`${baseURL}/api/blog/${slug}`);

@@ -257,7 +257,7 @@ const Blog = () => {
 
       // Fetch latest posts, categories, and stats in parallel
       const baseURL = process.env.NODE_ENV === 'production' 
-        ? 'https://api.richadali.dev' 
+        ? 'https://richadali.dev' 
         : 'http://localhost:3001';
         
       const [postsResponse, categoriesResponse, statsResponse] = await Promise.all([
