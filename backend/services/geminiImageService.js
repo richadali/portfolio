@@ -12,7 +12,7 @@ class GeminiImageService {
 
     this.genAI = new GoogleGenerativeAI(this.apiKey);
     this.model = this.genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-2.0-flash-preview-image-generation",
       generationConfig: {
         responseModalities: ["IMAGE", "TEXT"],
       },
@@ -75,7 +75,9 @@ class GeminiImageService {
               const base64Data = imageData.data;
               const imageBuffer = Buffer.from(base64Data, "base64");
 
-              const publicPath = process.env.FRONTEND_PUBLIC_PATH || path.join(__dirname, "..", "..", "public");
+              const publicPath =
+                process.env.FRONTEND_PUBLIC_PATH ||
+                path.join(__dirname, "..", "..", "public");
               const blogsDir = path.join(publicPath, "images", "blogs");
               if (!fs.existsSync(blogsDir)) {
                 fs.mkdirSync(blogsDir, { recursive: true });

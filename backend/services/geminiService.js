@@ -289,10 +289,10 @@ class GeminiService {
         "meta_title": "SEO optimized title (max 60 characters)",
         "meta_description": "SEO meta description (max 160 characters)",
         "tags": ["array", "of", "relevant", "technical", "tags"],
-        "image_prompt": "A detailed, descriptive prompt for an AI image generator. Describe a visually appealing scene that captures the essence of the blog post. Include style notes like 'professional tech illustration', '4k resolution', 'modern aesthetic', 'landscape orientation, 16:9 aspect ratio, suitable for blog thumbnail'.",
-        "aspect_ratio": "16:9",
-        "reading_time": 5
+        "aspect_ratio": "16:9"
       }
+
+      high quality, 4k resolution
       
       # CRITICAL INSTRUCTIONS
       1. Return ONLY valid JSON, no markdown code blocks or extra text
@@ -469,17 +469,21 @@ class GeminiService {
       data.tags = this.generateTagsFromTopic(topic, category);
     }
 
-    // Generate AI image using Gemini (async operation)
+    // Generate AI image using a structured prompt
     try {
-      console.log("🎨 Generating AI image with Gemini...");
+      console.log("🎨 Engineering a structured prompt for image generation...");
+      const imagePrompt = this.createImagePrompt(topic, category, data.tags);
+      console.log("   Generated Image Prompt:", imagePrompt);
+
+      console.log("🎨 Generating AI image with the engineered prompt...");
       data.featured_image = await this.imageService.generateBlogImage(
-        data.image_prompt,
+        imagePrompt,
         category,
         data.aspect_ratio
       );
     } catch (error) {
       console.warn(
-        "⚠️ Gemini image generation failed, using fallback:",
+        "⚠️ AI image generation failed, using fallback:",
         error.message
       );
       data.featured_image = this.generateFallbackImage(category);
@@ -520,196 +524,69 @@ class GeminiService {
     return fallbackImages[category] || fallbackImages["web-development"];
   }
 
-  // Generate featured image URL using topic-relevant images
-  generateFeaturedImage(topic, category, tags) {
-    // Create search terms based on category and topic
-    const searchTerms = this.getImageSearchTerms(topic, category, tags);
-    const primaryTerm = searchTerms[0] || "programming"; // Use the most relevant term
-
-    // Use Pexels API for topic-relevant images
-    // Format: https://images.pexels.com/photos/[id]/pexels-photo-[id].jpeg
-    // We'll use a curated list of tech-related image IDs that work well
-    const techImageIds = this.getTechImageIds(category);
-    const seed =
-      Math.abs(this.hashCode(topic + category)) % techImageIds.length;
-    const selectedImageId = techImageIds[seed];
-
-    const imageUrl = `https://images.pexels.com/photos/${selectedImageId}/pexels-photo-${selectedImageId}.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop`;
-
-    console.log(
-      `🖼️ Generated relevant image for "${topic}" (category: ${category}): ${imageUrl}`
-    );
-    return imageUrl;
-  }
-
-  // Get curated tech image IDs for different categories
-  getTechImageIds(category) {
-    const imageCollections = {
-      "web-development": [
-        3861969, // Laptop with code
-        4164418, // Computer screen with code
-        4348404, // Developer workspace
-        3183150, // Code on screen
-        1181244, // Programming setup
-        326518, // Black and white keyboard
-        1181271, // Multiple monitors
-        1714208, // Clean coding setup
-      ],
-      "react-frontend": [
-        4348404, // Developer workspace
-        3861969, // Laptop coding
-        4164418, // Code on screen
-        3183150, // Programming
-        1181244, // Development setup
-        7130560, // Modern workspace
-        3184291, // Clean desk setup
-        4348076, // Tech workspace
-      ],
-      "backend-apis": [
-        1181244, // Server-like setup
-        325185, // Data center feel
-        1181263, // Multiple screens
-        3182812, // Dark coding environment
-        4164418, // Server coding
-        159304, // Technology background
-        518244, // Network/server concept
-        3861969, // Backend development
-      ],
-      "devops-cloud": [
-        325185, // Infrastructure feel
-        159304, // Cloud technology
-        518244, // Network infrastructure
-        1181263, // Multiple monitors
-        3182812, // System administration
-        4348404, // Operations workspace
-        1714208, // Clean tech setup
-        326518, // Minimalist tech
-      ],
-      "ai-ml": [
-        3861969, // AI development
-        4164418, // Machine learning code
-        3183150, // Data science setup
-        3182812, // AI research environment
-        1181244, // ML workspace
-        7130560, // Modern AI setup
-        4348404, // Data science desk
-        159304, // Technology innovation
-      ],
-      "career-tips": [
-        3184291, // Professional workspace
-        7130560, // Career growth setup
-        4348076, // Professional environment
-        1714208, // Success workspace
-        3861969, // Professional development
-        4348404, // Career-focused setup
-        1181244, // Growth mindset workspace
-        326518, // Clean professional setup
-      ],
+  // Create a structured, high-quality image prompt
+  createImagePrompt(topic, category, tags = []) {
+    const categoryStyles = {
+      "web-development":
+        "modern computer setup with clean code on screen, developer workspace, professional lighting, high quality, 4k resolution, modern aesthetic",
+      "frontend-ux":
+        "sleek web interface design, UI elements, React development environment, clean aesthetic, high quality, 4k resolution, user-centric design",
+      "backend-apis":
+        "server infrastructure visualization, database schemas, API architecture diagram, tech-focused environment, high quality, 4k resolution, abstract background",
+      "devops-cloud":
+        "cloud infrastructure diagram, server networks, deployment pipelines, modern DevOps setup, high quality, 4k resolution, floating icons",
+      "ai-ml":
+        "artificial intelligence visualization, neural network art, data science workspace, futuristic tech, high quality, 4k resolution, glowing nodes",
+      "ecommerce-cms":
+        "e-commerce dashboard UI, online store interface, product grid, modern and clean, high quality, 4k resolution",
+      "career-tips":
+        "professional growth concept, abstract success visualization, modern office environment, career development path, high quality, 4k resolution, minimalist",
     };
 
-    return imageCollections[category] || imageCollections["web-development"];
-  }
+    const baseStyle =
+      categoryStyles[category] ||
+      "modern technology setup, programming environment, professional workspace, high quality, 4k resolution";
 
-  // Simple hash function to generate consistent seeds from text
-  hashCode(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-  }
-
-  // Get relevant search terms for images based on content
-  getImageSearchTerms(topic, category, tags) {
-    const baseTerms = [];
-
-    // Add category-specific terms
-    switch (category) {
-      case "web-development":
-        baseTerms.push(
-          "coding",
-          "programming",
-          "web development",
-          "computer screen",
-          "developer workspace"
-        );
-        break;
-      case "react-frontend":
-        baseTerms.push(
-          "react development",
-          "frontend coding",
-          "javascript",
-          "web interface",
-          "UI development"
-        );
-        break;
-      case "backend-apis":
-        baseTerms.push(
-          "server",
-          "database",
-          "API development",
-          "backend coding",
-          "cloud computing"
-        );
-        break;
-      case "devops-cloud":
-        baseTerms.push(
-          "cloud computing",
-          "servers",
-          "infrastructure",
-          "DevOps",
-          "technology"
-        );
-        break;
-      case "ai-ml":
-        baseTerms.push(
-          "artificial intelligence",
-          "machine learning",
-          "AI technology",
-          "neural networks",
-          "data science"
-        );
-        break;
-      case "career-tips":
-        baseTerms.push(
-          "professional development",
-          "career growth",
-          "workplace",
-          "team collaboration",
-          "success"
-        );
-        break;
-      default:
-        baseTerms.push("technology", "programming", "software development");
-    }
-
-    // Add terms from topic keywords
+    // Extract key technical terms from topic and tags
     const topicWords = topic.toLowerCase().split(/\s+/);
-    const relevantWords = topicWords.filter(
-      (word) =>
-        word.length > 3 &&
-        ![
-          "and",
-          "the",
-          "for",
-          "with",
-          "best",
-          "how",
-          "what",
-          "why",
-          "when",
-          "where",
-        ].includes(word)
-    );
+    const tagWords = tags.flatMap((tag) => tag.toLowerCase().split(/\s+/));
+    const allWords = [...new Set([...topicWords, ...tagWords])];
 
-    baseTerms.push(...relevantWords);
+    const relevantKeywords = allWords
+      .filter(
+        (word) =>
+          word.length > 2 &&
+          ![
+            "and",
+            "the",
+            "for",
+            "with",
+            "guide",
+            "developer's",
+            "using",
+            "from",
+            "best",
+            "practices",
+            "introduction",
+            "what's",
+            "how",
+          ].includes(word)
+      )
+      .slice(0, 4)
+      .join(", ");
 
-    // Add some general tech terms
-    baseTerms.push("technology", "innovation", "digital");
+    // Create a comprehensive, comma-separated prompt
+    const prompt = [
+      `Professional tech illustration representing the concept of '${topic}'`,
+      relevantKeywords ? `central themes include ${relevantKeywords}` : "",
+      baseStyle,
+      "landscape orientation, 16:9 aspect ratio",
+      "digital art, detailed, no text overlays, suitable for a blog thumbnail",
+    ]
+      .filter(Boolean)
+      .join(", ");
 
-    return baseTerms;
+    return prompt;
   }
 
   // Generate multiple blog posts
