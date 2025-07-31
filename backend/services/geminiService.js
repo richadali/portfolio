@@ -1,6 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const GeminiImageService = require("./geminiImageService");
 const FluxSchnellImageService = require("./fluxSchnellImageService");
+const PollinationImageService = require("./pollinationImageService");
 const BlogModel = require("../models/blogModel");
 
 class GeminiService {
@@ -9,6 +10,8 @@ class GeminiService {
     this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     if (process.env.IMAGE_GENERATION_SERVICE === "flux") {
       this.imageService = new FluxSchnellImageService();
+    } else if (process.env.IMAGE_GENERATION_SERVICE === "pollination") {
+      this.imageService = new PollinationImageService();
     } else {
       this.imageService = new GeminiImageService();
     }

@@ -9,6 +9,7 @@ const { body, validationResult } = require("express-validator");
 // Import blog functionality
 const { testConnection, initializeTables } = require("./config/database");
 const blogRoutes = require("./routes/blogRoutes");
+const sitemapRoutes = require("./routes/sitemapRoutes");
 const BlogScheduler = require("./services/blogScheduler");
 
 const app = express();
@@ -93,6 +94,7 @@ app.get("/api/health", (req, res) => {
 
 // Blog routes
 app.use("/api/blog", blogRoutes);
+app.use("/api/sitemap", sitemapRoutes);
 
 // Blog scheduler endpoints
 app.get("/api/scheduler/status", (req, res) => {
@@ -277,6 +279,70 @@ app.get("/api/flux/image/health", async (req, res) => {
     }
   } catch (error) {
     console.error("❌ Flux Image API health check error:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+// Pollination AI image generation test endpoint
+app.post("/api/pollination/image/test", async (req, res) => {
+  try {
+    const PollinationImageService = require("./services/pollinationImageService");
+    const pollinationImageService = new PollinationImageService();
+
+    const {
+      topic = "A serene landscape with mountains and a lake",
+      category = "ai-ml",
+    } = req.body;
+
+    console.log(`🧪 Testing Pollination AI image generation for topic: ${topic}`);
+
+    const result = await pollinationImageService.generateBlogImage(topic, category);
+
+    if (result) {
+      res.json({
+        success: true,
+        message: "Pollination AI image generated successfully",
+        data: {
+          topic,
+          category,
+          imageUrl: result,
+        },
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Pollination AI test failed",
+      });
+    }
+  } catch (error) {
+    console.error("❌ Pollination image test endpoint error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Pollination AI test failed",
+      error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+});
+
+// Health check endpoint for Pollination Image API
+app.get("/api/pollination/image/health", async (req, res) => {
+  try {
+    const PollinationImageService = require("./services/pollinationImageService");
+    const pollinationImageService = new PollinationImageService();
+
+    const result = await pollinationImageService.healthCheck();
+
+    if (result.status === "success") {
+      res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error("❌ Pollination Image API health check error:", error);
     res.status(500).json({
       status: "error",
       message: error.message,

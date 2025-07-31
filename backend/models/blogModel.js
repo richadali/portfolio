@@ -231,43 +231,30 @@ class BlogModel {
     const connection = await pool.getConnection();
 
     try {
-      // Ensure limit is a valid integer - fix for MySQL parameter error
-      const limitValue = Number.isInteger(limit) ? limit : parseInt(limit) || 3;
+      const limitValue = Number.isInteger(limit)
+        ? limit
+        : parseInt(limit, 10) || 3;
+      const validPostId = Number.isInteger(postId)
+        ? postId
+        : parseInt(postId, 10);
 
-      // Debug logging to identify the MySQL parameter issue
-      console.log("getRelatedPosts parameters:", {
-        postId,
-        category,
-        limit,
-        limitValue,
-        postIdType: typeof postId,
-        categoryType: typeof category,
-        limitValueType: typeof limitValue,
-      });
-
-      // Validate all parameters
-      if (!postId || (!Number.isInteger(postId) && !parseInt(postId))) {
-        console.error("Invalid postId:", postId);
+      if (!validPostId || !category || typeof category !== "string") {
+        console.error("Invalid parameters for getRelatedPosts:", {
+          postId,
+          category,
+        });
         return [];
       }
 
-      if (!category || typeof category !== "string") {
-        console.error("Invalid category:", category);
-        return [];
-      }
+      const sql = `
+        SELECT id, title, slug, excerpt, featured_image, category, reading_time, published_at
+        FROM blog_posts
+        WHERE id != ? AND category = ? AND status = 'published'
+        ORDER BY published_at DESC
+        LIMIT ${limitValue}
+      `;
 
-      const validPostId = Number.isInteger(postId) ? postId : parseInt(postId);
-
-      console.log("Final SQL parameters:", [validPostId, category, limitValue]);
-
-      const [posts] = await connection.execute(
-        `SELECT id, title, slug, excerpt, featured_image, category, reading_time, published_at
-         FROM blog_posts 
-         WHERE id != ? AND category = ? AND status = 'published'
-         ORDER BY published_at DESC
-         LIMIT ?`,
-        [validPostId, category, limitValue]
-      );
+      const [posts] = await connection.execute(sql, [validPostId, category]);
 
       // Parse tags for each related post
       const formattedPosts = posts.map((post) => ({
@@ -277,9 +264,7 @@ class BlogModel {
 
       return formattedPosts;
     } catch (error) {
-      console.error("getRelatedPosts SQL error:", error);
-      console.error("SQL:", error.sql);
-      console.error("Parameters that caused error:", [postId, category, limit]);
+      console.error("getRelatedPosts SQL error:", error.message);
       return []; // Return empty array on error instead of throwing
     } finally {
       connection.release();

@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const GeminiService = require("./geminiService");
 const BlogModel = require("../models/blogModel");
+const { generateSitemap } = require("./sitemapGenerator");
 
 class BlogScheduler {
   constructor() {
@@ -105,6 +106,9 @@ class BlogScheduler {
       // Save to database
       const result = await BlogModel.create(blogData);
 
+      // Regenerate sitemap
+      await generateSitemap();
+
       this.lastRun = new Date();
 
       console.log(`✅ Daily blog generated successfully!`);
@@ -123,6 +127,9 @@ class BlogScheduler {
         console.log("🔄 Attempting fallback blog generation...");
         const fallbackBlog = await this.geminiService.generateBlogPost();
         const result = await BlogModel.create(fallbackBlog);
+
+        // Regenerate sitemap
+        await generateSitemap();
 
         console.log(`✅ Fallback blog generated: "${fallbackBlog.title}"`);
         this.lastRun = new Date();
@@ -201,6 +208,9 @@ class BlogScheduler {
       }
 
       const result = await BlogModel.create(blogData);
+
+      // Regenerate sitemap
+      await generateSitemap();
 
       console.log(`✅ Manual blog generated: "${blogData.title}"`);
       return { success: true, data: result, blog: blogData };
@@ -296,6 +306,10 @@ class BlogScheduler {
     console.log(
       `🎉 Content backlog completed: ${results.length}/${count} posts generated`
     );
+    
+    // Regenerate sitemap after backlog is complete
+    await generateSitemap();
+    
     return results;
   }
 }

@@ -8,6 +8,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 import BlogCard from "../components/cards/BlogCard";
+import SEO from "../components/SEO";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -385,6 +386,13 @@ const BlogPost = () => {
 
   return (
     <Container>
+      <SEO
+        title={post.meta_title || post.title}
+        description={post.meta_description || post.excerpt}
+        image={post.featured_image}
+        url={`https://richadali.dev/blog/${post.slug}`}
+        type="article"
+      />
       <Wrapper>
         <BackButton onClick={() => navigate('/blog')}>
           <ArrowBack />

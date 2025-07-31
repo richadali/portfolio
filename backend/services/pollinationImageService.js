@@ -1,17 +1,10 @@
-const { HfInference } = require("@huggingface/inference");
+const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-class FluxSchnellImageService {
+class PollinationImageService {
   constructor() {
-    this.apiKey = process.env.HUGGINGFACE_API_KEY;
-
-    if (!this.apiKey) {
-      console.warn("⚠️ HUGGINGFACE_API_KEY not found in environment variables");
-    }
-
-    this.hf = new HfInference(this.apiKey);
-    this.model = "black-forest-labs/FLUX.1-schnell";
+    this.modelUrl = "https://pollinations.ai/p/";
   }
 
   /**
@@ -20,25 +13,21 @@ class FluxSchnellImageService {
    * @param {string} category - Blog category for fallback purposes
    * @returns {Promise<string>} - Public URL of the generated image
    */
-  async generateBlogImage(imagePrompt, category, aspectRatio = "16:9") {
+  async generateBlogImage(imagePrompt, category) {
     try {
-      console.log(`🎨 Generating AI image with Flux Schnell...`);
+      console.log(`🎨 Generating AI image with Pollinations.ai...`);
       console.log(`📝 Image prompt: "${imagePrompt}"`);
-      console.log(`📏 Aspect ratio: "${aspectRatio}"`);
 
-      const [width, height] = aspectRatio.split(":").map(Number);
+      const encodedPrompt = encodeURIComponent(imagePrompt);
+      const imageUrl = `${this.modelUrl}${encodedPrompt}`;
 
-      const response = await this.hf.textToImage({
-        model: this.model,
-        inputs: imagePrompt,
-        parameters: {
-          width: width * 128,
-          height: height * 128,
-        },
+      console.log(`🔗 Fetching image from: ${imageUrl}`);
+
+      const response = await axios.get(imageUrl, {
+        responseType: "arraybuffer",
       });
 
-      const imageBuffer = await response.arrayBuffer();
-      const buffer = Buffer.from(imageBuffer);
+      const buffer = Buffer.from(response.data, "binary");
 
       const publicPath =
         process.env.FRONTEND_PUBLIC_PATH ||
@@ -53,16 +42,15 @@ class FluxSchnellImageService {
 
       fs.writeFileSync(imagePath, buffer);
 
-      const imageUrl = `/images/blogs/${imageName}`;
-      console.log(`✅ Image saved successfully: ${imageUrl}`);
-      return imageUrl;
+      const savedImageUrl = `/images/blogs/${imageName}`;
+      console.log(`✅ Image saved successfully: ${savedImageUrl}`);
+      return savedImageUrl;
     } catch (error) {
       console.error(
-        "❌ Failed to generate AI image with Flux Schnell:",
+        "❌ Failed to generate AI image with Pollinations.ai:",
         error.message
       );
 
-      // Return fallback image on error
       return this.getFallbackImage(category);
     }
   }
@@ -96,31 +84,35 @@ class FluxSchnellImageService {
    */
   async healthCheck() {
     try {
-      if (!this.apiKey) {
-        return { status: "error", message: "API key not configured" };
-      }
+      console.log("🔍 Running Pollinations.ai API health check...");
+      const testPrompt = "A simple test prompt";
+      const encodedPrompt = encodeURIComponent(testPrompt);
+      const testUrl = `${this.modelUrl}${encodedPrompt}`;
 
-      console.log("🔍 Running Flux Schnell API health check...");
-
-      // Simple test generation
-      await this.hf.textToImage({
-        model: this.model,
-        inputs: "A simple test prompt",
+      const response = await axios.get(testUrl, {
+        responseType: "arraybuffer",
+        timeout: 10000, 
       });
 
-      return {
-        status: "success",
-        message: "Flux Schnell API is accessible",
-      };
+      if (response.status === 200 && response.data.length > 0) {
+        return {
+          status: "success",
+          message: "Pollinations.ai API is accessible",
+        };
+      } else {
+        return {
+          status: "error",
+          message: "Pollinations.ai API returned an invalid response",
+        };
+      }
     } catch (error) {
       console.error("❌ Health check failed:", error.message);
       return {
         status: "error",
         message: error.message,
-        details: "No additional details",
       };
     }
   }
 }
 
-module.exports = FluxSchnellImageService;
+module.exports = PollinationImageService;
