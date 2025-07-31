@@ -10,8 +10,6 @@ Welcome to my portfolio! This project showcases my skills, projects, and experie
 - [Project Structure](#project-structure)
 - [Frontend](#frontend)
 - [Backend](#backend)
-- [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Introduction
@@ -29,7 +27,7 @@ This portfolio is a React.js application that serves as an online showcase of my
 - **Contact**: A secure form to send me messages or inquiries.
 - **Interactive UI**: Smooth animations, tilt effects, and responsive design.
 - **Dark Theme**: Modern dark theme with accent colors.
-- **Automated Blog Content**: An AI-powered engine using Google's Gemini API to automatically generate, schedule, and publish new blog posts daily on various technical topics.
+- **Autonomous AI Content Agent**: A sophisticated, goal-oriented AI agent that independently generates, publishes, and ensures the discoverability of new technical blog posts every day.
 - **Advanced SEO**:
   - Dynamically generated meta tags for each blog post to ensure optimal search engine ranking.
   - Automated `sitemap.xml` generation that runs every time a new post is created, ensuring search engines can discover new content immediately.
@@ -104,9 +102,9 @@ The frontend is built with React.js and uses a component-based architecture. Key
 The backend is built with Node.js and Express and provides the following features:
 
 - **Contact Form API**: Secure endpoint for form submissions with email integration via Zoho SMTP.
-- **Blog & Content Engine**:
-  - **Automated Content Generation**: A scheduler (`node-cron`) triggers a daily job to generate a new blog post using the Gemini API.
-  - **Image Generation**: Integrates multiple AI services to generate featured images for blog posts.
+- **Blog & AI Agent Engine**:
+  - **Autonomous Content Generation**: An AI agent, driven by a `node-cron` scheduler, that autonomously performs a multi-step process to generate and publish a new blog post daily using the Gemini API.
+  - **Image Generation**: Integrates multiple AI services (gemini, flux, pollination) to generate featured images for blog posts.
   - **Database Management**: Stores and manages all blog content in a MySQL database.
 - **Automated SEO**:
   - **Dynamic Sitemap**: The sitemap is automatically regenerated and updated every time a new blog post is created, ensuring search engines can crawl new content immediately.
@@ -115,27 +113,6 @@ The backend is built with Node.js and Express and provides the following feature
   - Rate limiting to prevent spam.
   - CORS protection and security headers with Helmet.
 - **Error Handling**: Comprehensive error handling and logging.
-
-## Usage
-
-After installing and running the project locally, you can:
-
-1. Navigate through different sections using the navigation menu.
-2. Read AI-generated blog posts on the "Blog" page.
-3. View project details by clicking on project cards.
-4. Download my resume from the hero section.
-5. Send me a message through the contact form.
-6. Explore interactive elements like tilt effects and animations.
-
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to My Portfolio, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix: `git checkout -b my-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin my-feature`
-5. Open a pull request.
 
 ## License
 
