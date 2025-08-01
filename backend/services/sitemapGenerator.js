@@ -4,7 +4,9 @@ const BlogModel = require("../models/blogModel");
 
 const generateSitemap = async () => {
   const baseUrl = "https://richadali.dev";
-  const sitemapPath = path.join(__dirname, "../../public/sitemap.xml");
+  const publicAssetsPath =
+    process.env.FRONTEND_PUBLIC_PATH || path.join(__dirname, "../../public");
+  const sitemapPath = path.join(publicAssetsPath, "sitemap.xml");
 
   const staticUrls = [
     { loc: `${baseUrl}/`, changefreq: "weekly", priority: "1.0" },

@@ -17,7 +17,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 `;
 
@@ -149,7 +149,7 @@ const Content = styled.div`
   
   p {
     margin-bottom: 20px;
-    text-align: justify;
+    text-align: left;
   }
   
   ul, ol {

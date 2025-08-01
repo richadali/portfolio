@@ -9,7 +9,7 @@ export const Bio = {
     "Flutter Developer",
   ],
   description:
-    "Experienced IT professional with 5+ years in full-stack development, server setup and project deployment. Skilled in building scalable applications and configuring server environments. Seeking a challenging role to apply my technical expertise and stay ahead of emerging industry trends.",
+    "Experienced IT professional with 5+ years in building scalable web and mobile solutions for government, enterprise, and startups. Skilled in backend, frontend, server management, and cloud deployment. Proven ability to deliver secure, high-performance applications that solve real business challenges.",
   github: "https://github.com/richadali",
   resume: "/My Resume.pdf",
   linkedin: "https://www.linkedin.com/in/richadyaminali/",
