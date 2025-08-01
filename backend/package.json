@@ -5,9 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "nodemon --env-file=.env.example server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sitemap:generate": "node -e \"require('./services/sitemapGenerator').generateSitemap()\""
+    "sitemap:generate": "node -e \"require('./services/sitemapGenerator').generateSitemap()\"",
+    "list:models": "node listModels.js"
   },
   "keywords": [
     "portfolio",
