@@ -327,7 +327,7 @@ export const projects = [
     description:
       "An AI-powered travel planning application that generates personalized travel itineraries based on user preferences with daily activities, accommodations, transportation options, and budget breakdown",
     image: require("../images/ai_travel_planner.png"),
-    tags: ["Next.js", "Tailwind CSS", "Shadcn", "Google Gemini"],
+    tags: ["Next.js", "Tailwind CSS", "Shadcn", "Generative AI"],
     category: "ai",
     github: "",
     webapp: "https://aitravelplanner.richadali.dev",
@@ -391,7 +391,7 @@ export const projects = [
     tags: ["PHP", "MySQL", "Linguistics", "Algorithm Design"],
     category: "web app",
     github: "https://github.com/richadYamin/bodo-soundex",
-    webapp: "",
+    webapp: "https://northeastinfosys.in/bodosoundex",
   },
   {
     id: 5,
